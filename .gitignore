@@ -1,0 +1,16 @@
+node_modules/
+.next/
+out/
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+*.log
+.DS_Store
+coverage/
+dist/
+__pycache__/
+*.pyc
+.venv/
+chroma_data/
