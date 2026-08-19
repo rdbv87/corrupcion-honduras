@@ -56,7 +56,20 @@ Copiar `.env.example` a `.env.local` y configurar:
 ```bash
 DATABASE_URL=postgresql://user:pass@localhost:5432/corrupcion_hn
 OLLAMA_BASE_URL=http://localhost:11434
+CONTEXT7_API_KEY=
 ```
+
+## Context7
+
+Context7 proporciona documentación actualizada para librerías. Cuando necesites
+consultar docs de alguna dependencia, menciona `context7` en tu instrucción, por
+ejemplo:
+
+```
+¿Cómo se configura Tailwind CSS? use context7
+```
+
+La configuración del servidor MCP está en `opencode.json` (nivel proyecto).
 
 ## Dependencias clave
 
