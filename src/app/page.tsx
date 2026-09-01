@@ -10,6 +10,9 @@ import {
   KPIIndicator, CasoRed,
 } from '@/types/corruption';
 import { Timeline } from '@/components/timeline';
+import { sampleCasos, sampleEntidades, sampleEventos } from '@/data/sample';
+import { kpiIndicators } from '@/data/kpi';
+import { allCasosRed } from '@/data/redes';
 
 interface SearchResult {
   type: string;
@@ -77,93 +80,106 @@ export default function Home() {
   const [searchQuery, setSearchQuery] = useState('');
   const [filters, setFilters] = useState<FilterState>({});
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
-  const [filteredCasos, setFilteredCasos] = useState<Caso[]>([]);
-  const [filteredEntidades, setFilteredEntidades] = useState<Entidad[]>([]);
+  const [filteredCasos, setFilteredCasos] = useState<Caso[]>(sampleCasos);
+  const [filteredEntidades, setFilteredEntidades] = useState<Entidad[]>(sampleEntidades);
   const [activeTab, setActiveTab] = useState<MainTab>('search');
   const [loading, setLoading] = useState(false);
-  const [eventos, setEventos] = useState<EventoTemporal[]>([]);
+  const [eventos, setEventos] = useState<EventoTemporal[]>(sampleEventos);
   const [selectedCasoId, setSelectedCasoId] = useState<string | undefined>();
 
   // KPI state
-  const [kpiIndicators, setKpiIndicators] = useState<KPIIndicator[]>([]);
-  const [redesCasos, setRedesCasos] = useState<CasoRed[]>([]);
+  const [kpiIndicatorsList, setKpiIndicatorsList] = useState<KPIIndicator[]>([]);
+  const [redesCasosList, setRedesCasosList] = useState<CasoRed[]>([]);
 
-  // Data fetching
-  const fetchCasos = useCallback(async () => {
-    try {
-      const params = new URLSearchParams();
-      if (searchQuery) params.set('q', searchQuery);
-      if (filters.status) params.set('status', filters.status);
-      if (filters.monto_min) params.set('monto_min', filters.monto_min);
-      if (filters.monto_max) params.set('monto_max', filters.monto_max);
-      if (filters.fecha_desde) params.set('fecha_desde', filters.fecha_desde);
-      if (filters.fecha_hasta) params.set('fecha_hasta', filters.fecha_hasta);
-      const res = await fetch(`/api/casos?${params.toString()}`);
-      const data = await res.json();
-      setFilteredCasos(data);
-    } catch { /* ignore */ }
+  // Filtrado local de casos
+  useEffect(() => {
+    let result = [...sampleCasos];
+    if (searchQuery) {
+      const q = searchQuery.toLowerCase();
+      result = result.filter((c) => c.titulo.toLowerCase().includes(q) || c.descripcion.toLowerCase().includes(q));
+    }
+    if (filters.status) {
+      result = result.filter((c) => c.status === filters.status);
+    }
+    if (filters.monto_min) {
+      const min = Number(filters.monto_min);
+      result = result.filter((c) => (c.monto_estimado || 0) >= min);
+    }
+    if (filters.monto_max) {
+      const max = Number(filters.monto_max);
+      result = result.filter((c) => (c.monto_estimado || 0) <= max);
+    }
+    setFilteredCasos(result);
   }, [searchQuery, filters]);
 
-  const fetchEntidades = useCallback(async () => {
-    try {
-      const params = new URLSearchParams();
-      if (searchQuery) params.set('q', searchQuery);
-      if (filters.tipo) params.set('tipo', filters.tipo);
-      const res = await fetch(`/api/entidades?${params.toString()}`);
-      const data = await res.json();
-      setFilteredEntidades(data);
-    } catch { /* ignore */ }
+  // Filtrado local de entidades
+  useEffect(() => {
+    let result = [...sampleEntidades];
+    if (searchQuery) {
+      const q = searchQuery.toLowerCase();
+      result = result.filter((e) => e.nombre.toLowerCase().includes(q) || (e.descripcion && e.descripcion.toLowerCase().includes(q)));
+    }
+    if (filters.tipo) {
+      result = result.filter((e) => e.tipo === filters.tipo);
+    }
+    setFilteredEntidades(result);
   }, [searchQuery, filters.tipo]);
 
-  const fetchSearch = useCallback(async () => {
+  // Búsqueda cruzada local
+  useEffect(() => {
     if (!searchQuery && !filters.status && !filters.tipo) {
       setSearchResults([]);
       return;
     }
     setLoading(true);
-    try {
-      const params = new URLSearchParams();
-      if (searchQuery) params.set('q', searchQuery);
-      if (filters.status) params.set('status', filters.status);
-      if (filters.tipo) params.set('tipo', filters.tipo);
-      const res = await fetch(`/api/search?${params.toString()}`);
-      const data = await res.json();
-      setSearchResults(data.results || []);
-    } catch {
-      setSearchResults([]);
-    } finally {
-      setLoading(false);
-    }
-  }, [searchQuery, filters.status, filters.tipo]);
+    const q = searchQuery.toLowerCase();
+    const results: SearchResult[] = [];
 
-  const fetchEventos = useCallback(async () => {
-    try {
-      const params = new URLSearchParams();
-      if (selectedCasoId) params.set('caso_id', selectedCasoId);
-      const res = await fetch(`/api/eventos?${params.toString()}`);
-      const data = await res.json();
-      setEventos(data);
-    } catch { /* ignore */ }
+    sampleCasos.forEach((c) => {
+      if (!filters.status || c.status === filters.status) {
+        if (!q || c.titulo.toLowerCase().includes(q) || c.descripcion.toLowerCase().includes(q)) {
+          results.push({
+            type: 'Caso',
+            id: c.id,
+            titulo: c.titulo,
+            descripcion: c.descripcion,
+            relevance: q && c.titulo.toLowerCase().includes(q) ? 1.0 : 0.8,
+          });
+        }
+      }
+    });
+
+    sampleEntidades.forEach((e) => {
+      if (!filters.tipo || e.tipo === filters.tipo) {
+        if (!q || e.nombre.toLowerCase().includes(q) || (e.descripcion && e.descripcion.toLowerCase().includes(q))) {
+          results.push({
+            type: 'Entidad',
+            id: e.id,
+            titulo: e.nombre,
+            descripcion: e.descripcion,
+            relevance: q && e.nombre.toLowerCase().includes(q) ? 1.0 : 0.7,
+          });
+        }
+      }
+    });
+
+    setSearchResults(results);
+    setLoading(false);
+  }, [searchQuery, filters]);
+
+  // Filtrado local de eventos
+  useEffect(() => {
+    if (selectedCasoId) {
+      setEventos(sampleEventos.filter((ev) => ev.caso_id === selectedCasoId));
+    } else {
+      setEventos(sampleEventos);
+    }
   }, [selectedCasoId]);
 
-  const fetchKPIData = useCallback(async () => {
-    try {
-      const indRes = await fetch('/api/kpi/indicators');
-      setKpiIndicators(await indRes.json());
-    } catch { /* ignore */ }
+  useEffect(() => {
+    setKpiIndicatorsList(kpiIndicators);
+    setRedesCasosList(allCasosRed);
   }, []);
-
-  const fetchRedesCasos = useCallback(async () => {
-    try {
-      const res = await fetch('/api/redes/casos');
-      setRedesCasos(await res.json());
-    } catch { /* ignore */ }
-  }, []);
-
-  useEffect(() => { fetchEventos(); }, [fetchEventos]);
-  useEffect(() => { fetchSearch(); fetchCasos(); fetchEntidades(); }, [fetchSearch, fetchCasos, fetchEntidades]);
-  useEffect(() => { fetchKPIData(); }, [fetchKPIData]);
-  useEffect(() => { fetchRedesCasos(); }, [fetchRedesCasos]);
 
   const handleNodeClick = (node: GraphNode) => { setSelectedNode(node); setSelectedEdge(null); };
   const handleEdgeClick = (edge: GraphEdge) => { setSelectedEdge(edge); setSelectedNode(null); };
@@ -369,12 +385,12 @@ export default function Home() {
           </div>
           <div className="card p-6">
             <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-2">Redes de Corrupción</h3>
-            <p className="text-3xl font-bold text-red-600 dark:text-red-400">{redesCasos.length}</p>
+            <p className="text-3xl font-bold text-red-600 dark:text-red-400">{redesCasosList.length}</p>
             <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">casos emblemáticos mapeados</p>
           </div>
           <div className="card p-6">
             <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-2">Indicadores KPI</h3>
-            <p className="text-3xl font-bold text-green-600 dark:text-green-400">{kpiIndicators.length}</p>
+            <p className="text-3xl font-bold text-green-600 dark:text-green-400">{kpiIndicatorsList.length}</p>
             <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">en 6 áreas de impacto</p>
           </div>
           <div className="card p-6">

@@ -3,6 +3,16 @@
 import { useEffect, useState } from 'react';
 import { ActorDetail, CasoSelector, RedCorrupcion } from '@/components/redes';
 import { ActorRed, CasoRed, ConexionRed, RedGraphData } from '@/types/corruption';
+import { allCasosRed, getActoresByCaso, getConexionesByCaso } from '@/data/redes';
+
+const actorColorsMap: Record<string, string> = {
+  funcionario: '#ef4444',
+  empresario: '#f59e0b',
+  empresa: '#8b5cf6',
+  testaferro: '#6b7280',
+  politico: '#3b82f6',
+  proveedor: '#10b981',
+};
 
 export default function RedesPage() {
   const [casos, setCasos] = useState<CasoRed[]>([]);
@@ -14,32 +24,38 @@ export default function RedesPage() {
   const [selectedActor, setSelectedActor] = useState<ActorRed | null>(null);
 
   useEffect(() => {
-    const fetchCasos = async () => {
-      const response = await fetch('/api/redes/casos');
-      setCasos(await response.json());
-    };
-
-    fetchCasos();
+    setCasos(allCasosRed);
   }, []);
 
   useEffect(() => {
     if (!selectedCaso) return;
 
-    const fetchRedData = async () => {
-      const [graphResponse, actoresResponse, conexionesResponse] = await Promise.all([
-        fetch(`/api/redes/casos/${selectedCaso.id}/graph`),
-        fetch(`/api/redes/casos/${selectedCaso.id}/actores`),
-        fetch(`/api/redes/casos/${selectedCaso.id}/conexiones`),
-      ]);
-      const graph = await graphResponse.json();
-      setGraphData(graph.graphData);
-      setActorColors(graph.actorColors);
-      setActores(await actoresResponse.json());
-      setConexiones(await conexionesResponse.json());
-      setSelectedActor(null);
+    const currentActores = getActoresByCaso(selectedCaso.id);
+    const currentConexiones = getConexionesByCaso(selectedCaso.id);
+
+    const graph: RedGraphData = {
+      nodes: currentActores.map((actor) => ({
+        id: actor.id,
+        label: actor.nombre,
+        tipo: actor.tipo_actor,
+        status: actor.status_legal,
+        labelShort: actor.nombre.length > 20 ? actor.nombre.substring(0, 20) + '...' : actor.nombre,
+      })),
+      edges: currentConexiones.map((conn) => ({
+        id: conn.id,
+        source: conn.actor_origen_id,
+        target: conn.actor_destino_id,
+        label: conn.descripcion.substring(0, 40) + (conn.descripcion.length > 40 ? '...' : ''),
+        tipo: conn.tipo,
+        weight: conn.monto ? Math.min(1, conn.monto / 100000000) : 0.3,
+      })),
     };
 
-    fetchRedData();
+    setGraphData(graph);
+    setActorColors(actorColorsMap);
+    setActores(currentActores);
+    setConexiones(currentConexiones);
+    setSelectedActor(null);
   }, [selectedCaso]);
 
   const handleActorClick = (actor: { id: string }) => {

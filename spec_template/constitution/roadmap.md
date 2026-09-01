@@ -10,10 +10,10 @@ _Plan de evolución y estado de las features de la plataforma Corrupción Hondur
 4. **004 · Módulo de Perjuicio Social y KPIs** — Visualización del perjuicio económico cuantificado y su impacto sectorial en salud, educación e infraestructura.
 5. **005 · Motor Inicial de Scraping** — Scraper base para portales de noticias y fuentes oficiales con control de tasa y extracción de metadatos.
 6. **006 · Conector Especializado de Informes CNA (https://www.cna.hn/)** — Extractor e indexador automático de informes de investigación, líneas de denuncia, montos de perjuicio y expedientes del Consejo Nacional Anticorrupción.
+7. **007 · Panel de Administración y Edición de Redes** — Interfaz administrativa para registrar, editar, relacionar entidades y actualizar el estado procesal y las evidencias de cada caso emblemático.
 
 ## Siguiente 🔜
 
-7. **007 · Panel de Administración y Edición de Redes** — Interfaz administrativa para registrar, editar, relacionar entidades y actualizar el estado procesal y las evidencias de cada caso emblemático.
 8. **008 · Calculadora Dinámica de Perjuicio Social a la Población** — Herramienta interactiva que permite a la ciudadanía calcular la equivalencia del dinero desfalcado en medicamentos, camas UCI, escuelas o raciones de alimentos.
 
 ## Backlog / Ideas 💡

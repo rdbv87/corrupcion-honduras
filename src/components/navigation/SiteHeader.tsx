@@ -8,6 +8,7 @@ const navigationItems = [
   { href: '/', label: 'Explorar Datos' },
   { href: '/kpis', label: 'Perjuicio Social' },
   { href: '/redes', label: 'Redes de Casos' },
+  { href: '/admin', label: 'Administrar' },
 ];
 
 export default function SiteHeader() {

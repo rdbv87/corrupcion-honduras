@@ -559,6 +559,27 @@ Componentes Redes (`src/components/redes/`):
 
 ---
 
+### Feature 007: Panel de Administración y Edición de Redes ✅
+
+**SDD:** [`features/007-panel-admin-redes/`](features/007-panel-admin-redes/) (`spec.md`, `plan.md`, `tasks.md`)
+
+**Objetivo:** Interfaces administrativa y APIs para registrar, editar, relacionar y eliminar los elementos de las redes de los casos emblemáticos (IHSS, Hospitales Móviles, Pandora), permitiendo actualizar el estado procesal, montos y evidencias sin editar código.
+
+**Cambios:**
+- `src/lib/db/redesStore.ts` — (nuevo) Store mutable que siembra desde `src/data/redes/` y expone CRUD completo para `CasoRed`, `ActorRed` y `ConexionRed`, con borrado en cascada (caso→actores/conexiones; actor→conexiones) y validación de consistencia referencial.
+- Rutas de lectura `/api/redes/*` (`casos`, `[id]`, `[id]/actores`, `[id]/conexiones`, `[id]/graph`) — ahora consultan `redesStore` en lugar de los archivos estáticos, de modo que una edición se refleja al instante en la vista pública `/redes`.
+- Nuevos endpoints CRUD de administración bajo `/api/redes/admin/` (`casos`, `actores`, `conexiones` con `[id]` para PUT/DELETE), con validación de entradas y respuestas estructuradas.
+- `src/components/admin/` — (nuevos) `CasoForm`, `ActorForm`, `ConexionForm`, `AdminPanel` y barrel `index.ts`, con la estética retro/dossier del proyecto.
+- `src/app/admin/page.tsx` — (nueva) Página del panel de administración (`/admin`).
+- `src/components/navigation/SiteHeader.tsx` — Enlace "Administrar" en la navegación global.
+- `src/lib/db/__tests__/redesStore.test.ts` — (nuevo) Tests de CRUD, borrado en cascada y consistencia referencial.
+
+**Validación:** `npm test` (14 tests), `npm run lint` y `tsc --noEmit` aprobados.
+
+**Nota (límite pre-existente):** `npm run build` falla con `output: 'export'` por las rutas API dinámicas (p. ej. `/api/entidades/[id]`, `/api/redes/casos/[id]/graph`) que requieren `generateStaticParams()`. Esta limitación es **previa** a la feature 007 y afecta a todo el layer de API del proyecto; se opera en modo servidor con `npm run dev`.
+
+---
+
 ## Pendiente (Próximos Pasos)
 
 ### Paso 9: PostgreSQL + Autenticación

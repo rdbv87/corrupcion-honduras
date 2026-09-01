@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { KPIDashboard, KPITimeline } from '@/components/kpi';
 import { KPIDataPoint, KPIIndicator } from '@/types/corruption';
+import { kpiIndicators, allKPIData } from '@/data/kpi';
 
 export default function KPIsPage() {
   const [indicators, setIndicators] = useState<KPIIndicator[]>([]);
@@ -11,20 +12,9 @@ export default function KPIsPage() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const fetchKPIData = async () => {
-      try {
-        const [indicatorsResponse, dataResponse] = await Promise.all([
-          fetch('/api/kpi/indicators'),
-          fetch('/api/kpi/data'),
-        ]);
-        setIndicators(await indicatorsResponse.json());
-        setData(await dataResponse.json());
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchKPIData();
+    setIndicators(kpiIndicators);
+    setData(allKPIData);
+    setIsLoading(false);
   }, []);
 
   return (
