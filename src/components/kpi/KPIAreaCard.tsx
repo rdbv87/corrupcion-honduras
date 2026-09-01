@@ -23,7 +23,10 @@ export default function KPIAreaCard({ indicator, data, onClick }: KPIAreaCardPro
   const svgWidth = 110;
   const svgHeight = 35;
   const points = sorted.map((d, i) => {
-    const x = (i / (sorted.length - 1)) * svgWidth;
+    const x =
+      sorted.length === 1
+        ? svgWidth / 2
+        : (i / (sorted.length - 1)) * svgWidth;
     const y = svgHeight - ((d.value - minVal) / range) * svgHeight;
     return `${x},${y}`;
   });

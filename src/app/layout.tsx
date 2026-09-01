@@ -8,6 +8,9 @@ export const metadata: Metadata = {
   title: "Corrupción Honduras",
   description:
     "Portal para mapear, documentar y visibilizar el daño social de la corrupción en Honduras. Dirigido a ciudadanía, periodistas y activistas.",
+  icons: {
+    icon: "/favicon.ico",
+  },
 };
 
 export default function RootLayout({

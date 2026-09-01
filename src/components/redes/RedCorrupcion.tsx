@@ -54,7 +54,7 @@ export default function RedCorrupcion({
   const layoutRef = useRef<cytoscape.Layouts | null>(null);
   const callbackRef = useRef(onActorClick);
   const dragDiffRef = useRef<{ dx: number; dy: number } | null>(null);
-  const otherPositionsRef = useRef<Record<string, { x: number; y: number }>>({});
+  const otherPositionsRef = useRef<Record<string, { x: number; y: number; hop: number; weight: number }>>({});
 
   useEffect(() => {
     callbackRef.current = onActorClick;
@@ -178,7 +178,6 @@ export default function RedCorrupcion({
       minZoom: 0.3,
       maxZoom: 3,
       boxSelectionEnabled: false,
-      wheelSensitivity: 0.2,
     });
 
     cyRef.current = cy;
@@ -191,13 +190,77 @@ export default function RedCorrupcion({
       callbackRef.current?.({ id: nodeData.id, label: nodeData.label });
     });
 
+    const buildDistanceMap = (grabbedId: string): Map<string, number> => {
+      const dist = new Map<string, number>();
+      dist.set(grabbedId, 0);
+      const queue: string[] = [grabbedId];
+      while (queue.length > 0) {
+        const current = queue.shift()!;
+        const currentDist = dist.get(current)!;
+        cy.edges().forEach((e: cytoscape.EdgeSingular) => {
+          let target: string | null = null;
+          if (e.source().id() === current) target = e.target().id();
+          else if (e.target().id() === current) target = e.source().id();
+          if (target && !dist.has(target)) {
+            dist.set(target, currentDist + 1);
+            queue.push(target);
+          }
+        });
+      }
+      return dist;
+    };
+
+    const elasticityFactor = (hop: number): number => {
+      if (hop === 0) return 1;
+      // Elasticidad tipo tela de araña: la influencia decae de forma más suave
+      // con la distancia, otorgando mayor flexibilidad visual al arrastrar.
+      return Math.max(0.06, 1 / Math.pow(hop, 1.2));
+    };
+
+    const buildDegreeMap = (): Map<string, number> => {
+      const degrees = new Map<string, number>();
+      cy.nodes().forEach((n: cytoscape.NodeSingular) => {
+        degrees.set(n.id(), 0);
+      });
+      cy.edges().forEach((e: cytoscape.EdgeSingular) => {
+        const src = e.source().id();
+        const tgt = e.target().id();
+        degrees.set(src, (degrees.get(src) ?? 0) + 1);
+        degrees.set(tgt, (degrees.get(tgt) ?? 0) + 1);
+      });
+      return degrees;
+    };
+
+    // Normaliza el grado (número de relaciones) de un nodo a un peso ~0.5..2.5.
+    // A mayor número de relaciones (mayor centralidad en la investigación),
+    // mayor peso y menor desplazamiento al arrastrar.
+    const weightFromDegree = (degree: number): number => {
+      if (degree <= 0) return 0.5;
+      return Math.min(2.5, 0.5 + degree * 0.45);
+    };
+
+    const inertiaFactor = (weight: number): number => {
+      // Los nodos más livianos (pocas relaciones) se desplazan más;
+      // los más pesados (redes densas) resisten.
+      const normalized = Math.max(0.5, Math.min(2.5, weight));
+      return 1 / (0.5 + normalized * 0.55);
+    };
+
     cy.on('grab', 'node', (evt: EventObject) => {
       const grabbed = evt.target;
       stopLayout();
-      const positions: Record<string, { x: number; y: number }> = {};
+      const grabbedId = grabbed.id();
+      const degrees = buildDegreeMap();
+      const positions: Record<string, { x: number; y: number; hop: number; weight: number }> = {};
+      const dist = buildDistanceMap(grabbedId);
       cy.nodes().forEach((n: cytoscape.NodeSingular) => {
         const p = n.position();
-        positions[n.id()] = { x: p.x, y: p.y };
+        positions[n.id()] = {
+          x: p.x,
+          y: p.y,
+          hop: dist.get(n.id()) ?? 99,
+          weight: weightFromDegree(degrees.get(n.id()) ?? 0),
+        };
       });
       otherPositionsRef.current = positions;
       dragDiffRef.current = { dx: 0, dy: 0 };
@@ -222,7 +285,8 @@ export default function RedCorrupcion({
         if (id === grabbed.id()) return;
         const node = cy.getElementById(id);
         if (!node || node.empty()) return;
-        node.position({ x: p.x + dx, y: p.y + dy });
+        const factor = elasticityFactor(p.hop) * inertiaFactor(p.weight);
+        node.position({ x: p.x + dx * factor, y: p.y + dy * factor });
       });
 
       dragDiffRef.current = { dx, dy };

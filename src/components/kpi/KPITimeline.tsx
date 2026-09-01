@@ -30,7 +30,10 @@ export default function KPITimeline({ indicator, data }: KPITimelineProps) {
   const chartHeight = svgHeight - padding.top - padding.bottom;
 
   const points = sorted.map((d, i) => ({
-    x: padding.left + (i / (sorted.length - 1)) * chartWidth,
+    x:
+      sorted.length === 1
+        ? padding.left + chartWidth / 2
+        : padding.left + (i / (sorted.length - 1)) * chartWidth,
     y: padding.top + chartHeight - ((d.value - minVal) / range) * chartHeight,
     year: d.year,
     value: d.value,
