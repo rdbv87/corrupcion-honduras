@@ -2,7 +2,6 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { ThemeToggle } from '@/components/theme';
 
 const navigationItems = [
   { href: '/', label: 'Explorar Datos' },
@@ -54,9 +53,6 @@ export default function SiteHeader() {
               );
             })}
           </nav>
-          <div className="border-l-2 border-[#1c1917] pl-3 dark:border-[#3f3f46]">
-            <ThemeToggle />
-          </div>
         </div>
       </div>
     </header>

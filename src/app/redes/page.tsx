@@ -64,7 +64,7 @@ export default function RedesPage() {
 
   return (
     <main id="main-content" className="min-h-screen bg-[#f5f3ec] dark:bg-[#121316] transition-colors py-8 sm:py-12">
-      <section className="mx-auto max-w-7xl px-4 sm:px-6">
+      <section className="mx-auto max-w-[90rem] px-4 sm:px-6">
         <div className="mb-8 max-w-3xl border-b-2 border-[#1c1917] pb-4 dark:border-[#3f3f46]">
           <span className="text-xs font-mono font-bold uppercase tracking-widest text-[#b91c1c] dark:text-[#f87171] block mb-1">
             [ CASOS EMBLEMÁTICOS & EXPEDIENTES ]
@@ -78,42 +78,39 @@ export default function RedesPage() {
         </div>
 
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
-          <aside className="lg:col-span-4">
+          <aside className="lg:col-span-3">
             <h2 className="mb-3 text-xs font-mono font-bold uppercase tracking-widest text-[#78716c] dark:text-[#a1a1aa] border-b border-[#1c1917]/20 pb-1 dark:border-[#3f3f46]">
               [ SELECCIÓN DE CASO ]
             </h2>
             <CasoSelector casos={casos} selectedId={selectedCaso?.id} onSelect={setSelectedCaso} />
           </aside>
 
-          <section className="lg:col-span-5" aria-label="Grafo de relaciones">
+          <section className="lg:col-span-9 relative" aria-label="Grafo de relaciones">
             {graphData ? (
-              <RedCorrupcion
-                graphData={graphData}
-                actorColors={actorColors}
-                onActorClick={handleActorClick}
-                className="h-[450px] sm:h-[560px]"
-              />
+              <>
+                <RedCorrupcion
+                  graphData={graphData}
+                  actorColors={actorColors}
+                  onActorClick={handleActorClick}
+                  className="h-[500px] sm:h-[640px] lg:h-[720px]"
+                />
+                {selectedActor && (
+                  <div className="absolute top-4 right-4 w-80 max-h-[calc(100%-2rem)] overflow-y-auto z-10">
+                    <ActorDetail
+                      actor={selectedActor}
+                      conexiones={conexiones}
+                      allActores={actores}
+                      onClose={() => setSelectedActor(null)}
+                    />
+                  </div>
+                )}
+              </>
             ) : (
-              <div className="card flex h-[450px] items-center justify-center p-8 text-center font-mono text-xs text-[#78716c] dark:text-[#a1a1aa] sm:h-[560px]">
+              <div className="card flex h-[500px] items-center justify-center p-8 text-center font-mono text-xs text-[#78716c] dark:text-[#a1a1aa] sm:h-[640px] lg:h-[720px]">
                 [ Selecciona un caso para visualizar su red de actores y desvíos ]
               </div>
             )}
           </section>
-
-          <aside className="lg:col-span-3">
-            {selectedActor ? (
-              <ActorDetail
-                actor={selectedActor}
-                conexiones={conexiones}
-                allActores={actores}
-                onClose={() => setSelectedActor(null)}
-              />
-            ) : (
-              <div className="card p-4 text-xs font-mono text-[#78716c] dark:text-[#a1a1aa]">
-                [ Selecciona un nodo en el grafo para abrir su ficha de investigación ]
-              </div>
-            )}
-          </aside>
         </div>
       </section>
     </main>

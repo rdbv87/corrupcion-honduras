@@ -1,7 +1,7 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
-import cytoscape, { Core, EventObject } from 'cytoscape';
+import { useEffect, useRef, useCallback } from 'react';
+import cytoscape, { Core, EventObject, LayoutOptions } from 'cytoscape';
 import { RedGraphData } from '@/types/corruption';
 
 interface RedCorrupcionProps {
@@ -12,11 +12,11 @@ interface RedCorrupcionProps {
 }
 
 const statusBorderColors: Record<string, string> = {
-  condenado: '#dc2626',   // Rojo sello
-  procesado: '#d97706',   // Ocre
-  pro_fugo: '#ea580c',    // Terracota
-  investigado: '#2563eb', // Azul tinta
-  absuelto: '#16a34a',    // Verde contable
+  condenado: '#dc2626',
+  procesado: '#d97706',
+  pro_fugo: '#ea580c',
+  investigado: '#2563eb',
+  absuelto: '#16a34a',
 };
 
 const edgeTypeColors: Record<string, string> = {
@@ -27,6 +27,22 @@ const edgeTypeColors: Record<string, string> = {
   testaferro: '#f59e0b',
 };
 
+function buildCoseLayout(cy: Core, opts?: { numIter?: number; randomize?: boolean }): LayoutOptions {
+  const len = cy.elements().length || 1;
+  return {
+    name: 'cose',
+    animate: false,
+    nodeRepulsion: () => 12000,
+    idealEdgeLength: () => 140,
+    edgeElasticity: () => Math.max(50, Math.min(120, 4000 / len)),
+    gravity: 0.6,
+    numIter: opts?.numIter ?? 1500,
+    padding: 60,
+    randomize: opts?.randomize ?? true,
+    ungrabifyWhileSimulating: false,
+  } as cytoscape.LayoutOptions;
+}
+
 export default function RedCorrupcion({
   graphData,
   actorColors,
@@ -35,6 +51,25 @@ export default function RedCorrupcion({
 }: RedCorrupcionProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const cyRef = useRef<Core | null>(null);
+  const layoutRef = useRef<cytoscape.Layouts | null>(null);
+  const callbackRef = useRef(onActorClick);
+  const dragDiffRef = useRef<{ dx: number; dy: number } | null>(null);
+  const otherPositionsRef = useRef<Record<string, { x: number; y: number }>>({});
+
+  useEffect(() => {
+    callbackRef.current = onActorClick;
+  }, [onActorClick]);
+
+  const stopLayout = useCallback(() => {
+    if (layoutRef.current) {
+      try {
+        layoutRef.current.stop();
+      } catch {
+        // Ignorar
+      }
+      layoutRef.current = null;
+    }
+  }, []);
 
   useEffect(() => {
     if (!containerRef.current || !graphData) return;
@@ -69,7 +104,7 @@ export default function RedCorrupcion({
         selector: 'node',
         style: {
           label: 'data(label)',
-          'background-color': (ele) => actorColors[ele.data('tipo')] || '#4b5563',
+          'background-color': (ele: cytoscape.NodeSingular) => actorColors[ele.data('tipo')] || '#4b5563',
           color: '#fff',
           'text-valign': 'center',
           'text-halign': 'center',
@@ -85,7 +120,7 @@ export default function RedCorrupcion({
           width: 48,
           height: 48,
           'border-width': 3,
-          'border-color': (ele) => statusBorderColors[ele.data('status')] || '#1c1917',
+          'border-color': (ele: cytoscape.NodeSingular) => statusBorderColors[ele.data('status')] || '#1c1917',
         } as cytoscape.Css.Node,
       },
       {
@@ -99,10 +134,10 @@ export default function RedCorrupcion({
         selector: 'edge',
         style: {
           label: 'data(label)',
-          width: (ele) => Math.max(1.5, (ele.data('weight') || 1) * 3),
-          'line-color': (ele) => edgeTypeColors[ele.data('tipo')] || '#78716c',
+          width: (ele: cytoscape.EdgeSingular) => Math.max(1.5, (ele.data('weight') || 1) * 3),
+          'line-color': (ele: cytoscape.EdgeSingular) => edgeTypeColors[ele.data('tipo')] || '#78716c',
           'line-opacity': 0.9,
-          'target-arrow-color': (ele) => edgeTypeColors[ele.data('tipo')] || '#78716c',
+          'target-arrow-color': (ele: cytoscape.EdgeSingular) => edgeTypeColors[ele.data('tipo')] || '#78716c',
           'target-arrow-shape': 'triangle',
           'target-arrow-fill': 'filled',
           'arrow-scale': 1.2,
@@ -148,31 +183,60 @@ export default function RedCorrupcion({
 
     cyRef.current = cy;
 
-    const activeLayout = cy.layout({
-      name: 'cose',
-      animate: false,
-      nodeRepulsion: () => 12000,
-      idealEdgeLength: () => 140,
-      edgeElasticity: (edge) => {
-        const len = cy.elements().length || 1;
-        return Math.max(50, Math.min(120, 4000 / len));
-      },
-      gravity: 0.6,
-      numIter: 1500,
-      padding: 60,
-      randomize: true,
-    } as cytoscape.LayoutOptions);
-
-    activeLayout.run();
+    layoutRef.current = cy.layout(buildCoseLayout(cy, { numIter: 1500, randomize: true }));
+    layoutRef.current.run();
 
     cy.on('tap', 'node', (evt: EventObject) => {
       const nodeData = evt.target.data();
-      onActorClick?.({ id: nodeData.id, label: nodeData.label });
+      callbackRef.current?.({ id: nodeData.id, label: nodeData.label });
+    });
+
+    cy.on('grab', 'node', (evt: EventObject) => {
+      const grabbed = evt.target;
+      stopLayout();
+      const grabbedPos = grabbed.position();
+      const others: Record<string, { x: number; y: number }> = {};
+      cy.nodes().forEach((n: cytoscape.NodeSingular) => {
+        if (n.id() === grabbed.id()) return;
+        const p = n.position();
+        others[n.id()] = { x: p.x, y: p.y };
+      });
+      otherPositionsRef.current = others;
+      dragDiffRef.current = { dx: 0, dy: 0 };
+    });
+
+    cy.on('drag', 'node', (evt: EventObject) => {
+      const grabbed = evt.target;
+      const startDiff = dragDiffRef.current;
+      if (!startDiff) return;
+
+      const currentPos = grabbed.position();
+      const dx = currentPos.x - otherPositionsRef.current[grabbed.id()]?.x;
+      const dy = currentPos.y - otherPositionsRef.current[grabbed.id()]?.y;
+
+      const deltaX = dx - startDiff.dx;
+      const deltaY = dy - startDiff.dy;
+
+      if (deltaX === 0 && deltaY === 0) return;
+
+      Object.entries(otherPositionsRef.current).forEach(([id, p]) => {
+        if (id === grabbed.id()) return;
+        const node = cy.getElementById(id);
+        if (!node || node.empty()) return;
+        node.position({ x: p.x + dx, y: p.y + dy });
+      });
+
+      dragDiffRef.current = { dx, dy };
+    });
+
+    cy.on('free', 'node', () => {
+      dragDiffRef.current = null;
+      otherPositionsRef.current = {};
     });
 
     return () => {
       try {
-        activeLayout.stop();
+        stopLayout();
         cy.stop();
         cy.destroy();
       } catch {
@@ -180,7 +244,7 @@ export default function RedCorrupcion({
       }
       cyRef.current = null;
     };
-  }, [graphData, actorColors, onActorClick]);
+  }, [graphData, actorColors, stopLayout]);
 
   const legendEntries = Object.entries(actorColors).filter(([k]) => k !== 'otro');
 
