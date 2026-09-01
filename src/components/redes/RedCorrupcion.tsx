@@ -194,25 +194,24 @@ export default function RedCorrupcion({
     cy.on('grab', 'node', (evt: EventObject) => {
       const grabbed = evt.target;
       stopLayout();
-      const grabbedPos = grabbed.position();
-      const others: Record<string, { x: number; y: number }> = {};
+      const positions: Record<string, { x: number; y: number }> = {};
       cy.nodes().forEach((n: cytoscape.NodeSingular) => {
-        if (n.id() === grabbed.id()) return;
         const p = n.position();
-        others[n.id()] = { x: p.x, y: p.y };
+        positions[n.id()] = { x: p.x, y: p.y };
       });
-      otherPositionsRef.current = others;
+      otherPositionsRef.current = positions;
       dragDiffRef.current = { dx: 0, dy: 0 };
     });
 
     cy.on('drag', 'node', (evt: EventObject) => {
       const grabbed = evt.target;
       const startDiff = dragDiffRef.current;
-      if (!startDiff) return;
+      const startPos = otherPositionsRef.current[grabbed.id()];
+      if (!startDiff || !startPos) return;
 
       const currentPos = grabbed.position();
-      const dx = currentPos.x - otherPositionsRef.current[grabbed.id()]?.x;
-      const dy = currentPos.y - otherPositionsRef.current[grabbed.id()]?.y;
+      const dx = currentPos.x - startPos.x;
+      const dy = currentPos.y - startPos.y;
 
       const deltaX = dx - startDiff.dx;
       const deltaY = dy - startDiff.dy;
