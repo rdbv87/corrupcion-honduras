@@ -1,3 +1,100 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: light dark;
+  }
+
+  html {
+    @apply scroll-smooth;
+  }
+
+  body {
+    @apply min-h-screen bg-[#f5f3ec] text-[#1c1917] dark:bg-[#121316] dark:text-[#f4f4f5] antialiased selection:bg-[#1c1917] selection:text-[#f5f3ec] dark:selection:bg-[#f4f4f5] dark:selection:text-[#121316];
+  }
+
+  *:focus-visible {
+    @apply outline-none ring-2 ring-[#1c1917] ring-offset-2 ring-offset-[#f5f3ec] dark:ring-[#f4f4f5] dark:ring-offset-[#121316];
+  }
+
+  /* Scrollbar retro/minimalista */
+  ::-webkit-scrollbar {
+    @apply w-2 h-2;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-[#e7e3d8] dark:bg-[#1a1c22] border-l border-[#1c1917]/20 dark:border-[#3f3f46];
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-[#1c1917]/60 dark:bg-[#52525b] border border-[#1c1917] dark:border-[#71717a];
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-[#1c1917] dark:bg-[#a1a1aa];
+  }
+}
+
+@layer components {
+  /* Cards con estilo ficha de archivo / dossier */
+  .card {
+    @apply bg-white dark:bg-[#1a1c22] border-2 border-[#1c1917] dark:border-[#3f3f46] shadow-retro dark:shadow-none transition-all;
+  }
+
+  .card-hover {
+    @apply card hover:-translate-y-0.5 hover:shadow-[4px_4px_0px_0px_rgba(28,25,23,1)] dark:hover:border-[#71717a];
+  }
+
+  /* Botones mecánicos / retro */
+  .btn-primary {
+    @apply inline-flex items-center justify-center px-4 py-2 text-sm font-semibold tracking-wide text-white bg-[#1c1917] hover:bg-[#292524] dark:bg-[#f4f4f5] dark:text-[#121316] dark:hover:bg-white border-2 border-[#1c1917] dark:border-[#f4f4f5] shadow-retro dark:shadow-none active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all focus-visible:ring-2;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center px-4 py-2 text-sm font-semibold tracking-wide text-[#1c1917] dark:text-[#f4f4f5] bg-[#faf8f2] dark:bg-[#242730] hover:bg-[#ede9df] dark:hover:bg-[#2e323e] border-2 border-[#1c1917] dark:border-[#3f3f46] shadow-retro dark:shadow-none active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all;
+  }
+
+  /* Entradas y formularios */
+  .input-base {
+    @apply w-full px-3 py-2 text-sm font-mono border-2 border-[#1c1917] dark:border-[#3f3f46] bg-white dark:bg-[#1a1c22] text-[#1c1917] dark:text-[#f4f4f5] focus:outline-none focus:ring-0 focus:border-[#b91c1c] dark:focus:border-[#f4f4f5] placeholder-[#78716c] dark:placeholder-[#a1a1aa];
+  }
+
+  .select-base {
+    @apply px-3 py-2 text-sm font-mono border-2 border-[#1c1917] dark:border-[#3f3f46] bg-white dark:bg-[#1a1c22] text-[#1c1917] dark:text-[#f4f4f5] focus:outline-none focus:ring-0 focus:border-[#b91c1c] dark:focus:border-[#f4f4f5];
+  }
+
+  /* Badges estilo sello oficial / sello de expediente */
+  .badge {
+    @apply inline-flex items-center px-2 py-0.5 text-xs font-mono font-semibold uppercase tracking-wider border;
+  }
+
+  .badge-green {
+    @apply badge bg-[#f0fdf4] text-[#15803d] border-[#15803d] dark:bg-[#14532d]/20 dark:text-[#86efac] dark:border-[#15803d];
+  }
+
+  .badge-yellow {
+    @apply badge bg-[#fffbeb] text-[#b45309] border-[#b45309] dark:bg-[#78350f]/20 dark:text-[#fde047] dark:border-[#b45309];
+  }
+
+  .badge-red {
+    @apply badge bg-[#fef2f2] text-[#b91c1c] border-[#b91c1c] dark:bg-[#7f1d1d]/20 dark:text-[#fca5a5] dark:border-[#b91c1c];
+  }
+
+  .badge-gray {
+    @apply badge bg-[#f5f5f4] text-[#57534e] border-[#57534e] dark:bg-[#27272a] dark:text-[#d4d4d8] dark:border-[#52525b];
+  }
+
+  .badge-blue {
+    @apply badge bg-[#eff6ff] text-[#1d4ed8] border-[#1d4ed8] dark:bg-[#1e3a8a]/20 dark:text-[#93c5fd] dark:border-[#1d4ed8];
+  }
+
+  .badge-purple {
+    @apply badge bg-[#faf5ff] text-[#7e22ce] border-[#7e22ce] dark:bg-[#581c87]/20 dark:text-[#d8b4fe] dark:border-[#7e22ce];
+  }
+
+  .badge-orange {
+    @apply badge bg-[#fff7ed] text-[#c2410c] border-[#c2410c] dark:bg-[#7c2d12]/20 dark:text-[#fdba74] dark:border-[#c2410c];
+  }
+}

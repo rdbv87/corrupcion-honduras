@@ -3,35 +3,38 @@
 import { useEffect, useRef, useState } from 'react';
 import cytoscape, { Core, EventObject } from 'cytoscape';
 import { GraphData, GraphNode, GraphEdge } from '@/types/corruption';
+import { LayoutName, layoutOptions } from './graphLayouts';
 
 interface CytoscapeGraphProps {
   data: GraphData;
+  layout?: LayoutName;
   onNodeClick?: (node: GraphNode) => void;
   onEdgeClick?: (edge: GraphEdge) => void;
   className?: string;
 }
 
 const nodeColors: Record<string, string> = {
-  persona: '#3b82f6',
-  empresa: '#10b981',
-  institucion: '#8b5cf6',
-  organismo: '#f59e0b',
-  caso: '#ef4444',
-  otro: '#6b7280',
+  persona: '#1d4ed8',     // Azul tinta
+  empresa: '#d97706',     // Ámbar
+  institucion: '#6d28d9', // Púrpura
+  organismo: '#15803d',   // Verde
+  caso: '#b91c1c',        // Rojo sello
+  otro: '#4b5563',        // Grafito
 };
 
 const edgeColors: Record<string, string> = {
-  trabaja_con: '#3b82f6',
-  familiar: '#ec4899',
-  financiero: '#10b981',
-  comercial: '#f59e0b',
-  politico: '#8b5cf6',
-  involucra: '#6b7280',
-  otro: '#9ca3af',
+  trabaja_con: '#1d4ed8',
+  familiar: '#be185d',
+  financiero: '#b91c1c',
+  comercial: '#d97706',
+  politico: '#6d28d9',
+  involucra: '#4b5563',
+  otro: '#78716c',
 };
 
 export default function CytoscapeGraph({ 
   data, 
+  layout = 'cose',
   onNodeClick, 
   onEdgeClick,
   className = '' 
@@ -122,24 +125,13 @@ export default function CytoscapeGraph({
       },
     ];
 
-    const layoutOptions: cytoscape.LayoutOptions = {
-      name: 'cose',
-      animate: true,
-      animationDuration: 1000,
-      animationEasing: 'ease-in-out-cubic',
-      nodeRepulsion: () => 8000,
-      idealEdgeLength: () => 100,
-      edgeElasticity: () => 100,
-      gravity: 0.25,
-      numIter: 1000,
-      padding: 50,
-    };
+    const chosenLayoutOptions = layoutOptions[layout] || layoutOptions.cose;
 
     const cy = cytoscape({
       container: containerRef.current,
       elements,
       style,
-      layout: layoutOptions,
+      layout: { name: 'null' },
       minZoom: 0.5,
       maxZoom: 3,
       boxSelectionEnabled: false,
@@ -147,6 +139,9 @@ export default function CytoscapeGraph({
     });
 
     cyRef.current = cy;
+
+    const activeLayout = cy.layout(chosenLayoutOptions);
+    activeLayout.run();
 
     cy.on('tap', 'node', (evt: EventObject) => {
       const node = evt.target;
@@ -183,40 +178,56 @@ export default function CytoscapeGraph({
     });
 
     return () => {
-      cy.destroy();
+      try {
+        activeLayout.stop();
+        cy.stop();
+        cy.destroy();
+      } catch {
+        // Ignorar posibles errores en desmontaje
+      }
       cyRef.current = null;
     };
-  }, [data, onNodeClick, onEdgeClick]);
+  }, [data, layout, onNodeClick, onEdgeClick]);
 
   return (
     <div className={`relative ${className}`}>
       <div 
         ref={containerRef} 
-        className="w-full h-full bg-gray-900 rounded-lg border border-gray-700"
+        className="w-full h-full bg-[#181920] border-2 border-[#1c1917] dark:border-[#3f3f46] shadow-retro dark:shadow-none"
         style={{ minHeight: '400px' }}
       />
       
-      <div className="absolute top-4 left-4 bg-gray-800 rounded-lg p-3 text-sm">
-        <h4 className="font-semibold text-white mb-2">Leyenda</h4>
-        <div className="space-y-1">
+      <div className="absolute top-3 left-3 bg-[#fdfcf9] dark:bg-[#1f2026] p-3 text-xs font-mono border-2 border-[#1c1917] dark:border-[#3f3f46] shadow-retro-sm dark:shadow-none">
+        <h4 className="font-bold text-[#1c1917] dark:text-[#f4f4f5] uppercase tracking-wider mb-2 border-b border-[#1c1917]/20 dark:border-[#3f3f46] pb-1">
+          [ Actores ]
+        </h4>
+        <div className="space-y-1.5">
           {Object.entries(nodeColors).filter(([key]) => key !== 'otro').map(([type, color]) => (
             <div key={type} className="flex items-center gap-2">
-              <div 
-                className="w-3 h-3 rounded-full" 
+              <span 
+                className="w-2.5 h-2.5 border border-[#1c1917] dark:border-white inline-block" 
                 style={{ backgroundColor: color }}
+                aria-hidden="true"
               />
-              <span className="text-gray-300 capitalize">{type}</span>
+              <span className="text-[#1c1917] dark:text-[#d4d4d8] uppercase font-medium">{type}</span>
             </div>
           ))}
         </div>
       </div>
 
       {selectedNode && (
-        <div className="absolute bottom-4 right-4 bg-gray-800 rounded-lg p-4 max-w-xs">
-          <h4 className="font-semibold text-white">{selectedNode.label}</h4>
-          <p className="text-sm text-gray-400 capitalize">{selectedNode.type}</p>
+        <div className="absolute bottom-3 right-3 bg-[#fdfcf9] dark:bg-[#1f2026] p-4 max-w-xs border-2 border-[#1c1917] dark:border-[#3f3f46] shadow-retro-sm dark:shadow-none">
+          <div className="flex items-center justify-between gap-2 border-b border-[#1c1917]/20 dark:border-[#3f3f46] pb-1.5 mb-2">
+            <span className="text-[10px] font-mono uppercase tracking-widest text-[#78716c] dark:text-[#a1a1aa]">
+              [ Ficha ]
+            </span>
+            <span className="text-[10px] font-mono uppercase px-1.5 py-0.5 border border-[#1c1917] dark:border-[#71717a] font-bold">
+              {selectedNode.type}
+            </span>
+          </div>
+          <h4 className="font-bold text-[#1c1917] dark:text-[#f4f4f5] text-sm leading-tight">{selectedNode.label}</h4>
           {selectedNode.data && 'descripcion' in selectedNode.data && (
-            <p className="text-sm text-gray-300 mt-2">{selectedNode.data.descripcion}</p>
+            <p className="text-xs text-[#57534e] dark:text-[#a1a1aa] mt-2 leading-relaxed">{selectedNode.data.descripcion}</p>
           )}
         </div>
       )}

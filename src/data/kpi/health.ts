@@ -1,0 +1,41 @@
+import { KPIDataPoint } from '@/types/corruption';
+
+export const healthData: KPIDataPoint[] = [
+  { indicator_id: 'gasto-salud-pib', year: 2010, value: 4.1 },
+  { indicator_id: 'gasto-salud-pib', year: 2011, value: 4.3 },
+  { indicator_id: 'gasto-salud-pib', year: 2012, value: 4.4 },
+  { indicator_id: 'gasto-salud-pib', year: 2013, value: 4.5 },
+  { indicator_id: 'gasto-salud-pib', year: 2014, value: 4.4 },
+  { indicator_id: 'gasto-salud-pib', year: 2015, value: 4.6 },
+  { indicator_id: 'gasto-salud-pib', year: 2016, value: 4.7 },
+  { indicator_id: 'gasto-salud-pib', year: 2017, value: 4.6 },
+  { indicator_id: 'gasto-salud-pib', year: 2018, value: 4.5 },
+  { indicator_id: 'gasto-salud-pib', year: 2019, value: 4.7 },
+  { indicator_id: 'gasto-salud-pib', year: 2020, value: 5.8, notas: 'COVID-19 incremento gasto' },
+  { indicator_id: 'gasto-salud-pib', year: 2021, value: 5.4 },
+  { indicator_id: 'gasto-salud-pib', year: 2022, value: 4.9 },
+  { indicator_id: 'gasto-salud-pib', year: 2023, value: 4.8 },
+
+  { indicator_id: 'mortalidad-infantil', year: 2000, value: 34 },
+  { indicator_id: 'mortalidad-infantil', year: 2005, value: 28 },
+  { indicator_id: 'mortalidad-infantil', year: 2010, value: 22 },
+  { indicator_id: 'mortalidad-infantil', year: 2015, value: 19 },
+  { indicator_id: 'mortalidad-infantil', year: 2019, value: 17 },
+  { indicator_id: 'mortalidad-infantil', year: 2020, value: 17 },
+  { indicator_id: 'mortalidad-infantil', year: 2022, value: 17 },
+
+  { indicator_id: 'esperanza-vida', year: 2000, value: 69.4 },
+  { indicator_id: 'esperanza-vida', year: 2005, value: 70.2 },
+  { indicator_id: 'esperanza-vida', year: 2010, value: 71.3 },
+  { indicator_id: 'esperanza-vida', year: 2015, value: 72.1 },
+  { indicator_id: 'esperanza-vida', year: 2019, value: 72.9 },
+  { indicator_id: 'esperanza-vida', year: 2020, value: 72.3, notas: 'Impacto COVID-19' },
+  { indicator_id: 'esperanza-vida', year: 2022, value: 72.7 },
+
+  { indicator_id: 'cobertura-ihss', year: 2010, value: 16.5 },
+  { indicator_id: 'cobertura-ihss', year: 2013, value: 17.2 },
+  { indicator_id: 'cobertura-ihss', year: 2015, value: 18.0 },
+  { indicator_id: 'cobertura-ihss', year: 2018, value: 19.5 },
+  { indicator_id: 'cobertura-ihss', year: 2020, value: 20.0 },
+  { indicator_id: 'cobertura-ihss', year: 2023, value: 21.0 },
+];

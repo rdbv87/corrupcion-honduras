@@ -1,8 +1,9 @@
 export type EntityType = 'persona' | 'empresa' | 'institucion' | 'organismo' | 'otro';
 export type CaseStatus = 'abierto' | 'investigacion' | 'cerrado' | 'archivado';
 export type ConnectionType = 'trabaja_con' | 'familiar' | 'financiero' | 'comercial' | 'politico' | 'otro';
-export type SourceType = 'documento' | 'noticia' | 'testimonio' | 'sentencia' | 'oficial' | 'otro';
+export type SourceType = 'documento' | 'noticia' | 'testimonio' | 'sentencia' | 'oficial' | 'informe' | 'otro';
 export type ImpactType = 'economico' | 'social' | 'ambiental' | 'salud' | 'educacion' | 'otro';
+export type EventoTemporalType = 'investigacion' | 'sentencia' | 'denuncia' | 'resolucion' | 'comparecencia' | 'medida cautelar' | 'otro';
 
 export interface Caso {
   id: string;
@@ -82,7 +83,7 @@ export interface EventoTemporal {
   titulo: string;
   descripcion?: string;
   fecha: Date;
-  tipo: string;
+  tipo: EventoTemporalType;
   metadata?: Record<string, unknown>;
   created_at: Date;
 }
@@ -107,4 +108,77 @@ export interface GraphEdge {
 export interface GraphData {
   nodes: GraphNode[];
   edges: GraphEdge[];
+}
+
+export type AreaImpacto = 'salud' | 'educacion' | 'empleo' | 'infraestructura' | 'tecnologia' | 'general';
+
+export interface KPIIndicator {
+  id: string;
+  area: AreaImpacto;
+  nombre: string;
+  descripcion: string;
+  unidad: string;
+  fuente: string;
+  fuente_url: string;
+  color: string;
+}
+
+export interface KPIDataPoint {
+  indicator_id: string;
+  year: number;
+  value: number;
+  notas?: string;
+}
+
+export interface KPISummary {
+  area: AreaImpacto;
+  indicadores: number;
+  ultimo_valor: number;
+  ultimo_anio: number;
+  tendencia: 'sube' | 'baja' | 'estable';
+}
+
+export type StatusLegal = 'condenado' | 'procesado' | 'pro_fugo' | 'investigado' | 'absuelto';
+export type TipoActor = 'funcionario' | 'empresario' | 'empresa' | 'testaferro' | 'politico' | 'proveedor';
+export type TipoConexionRed = 'financiero' | 'familiar' | 'politico' | 'empresarial' | 'testaferro';
+
+export interface CasoRed {
+  id: string;
+  titulo: string;
+  subtitulo: string;
+  periodo: string;
+  monto: number;
+  moneda: string;
+  monto_usd: number;
+  descripcion_corta: string;
+  fuente_principal: string;
+  fuente_url: string;
+  status_judicial: string;
+}
+
+export interface ActorRed {
+  id: string;
+  caso_id: string;
+  nombre: string;
+  tipo_actor: TipoActor;
+  rol: string;
+  status_legal: StatusLegal;
+  organizacion?: string;
+  monto_vinculado?: number;
+}
+
+export interface ConexionRed {
+  id: string;
+  caso_id: string;
+  actor_origen_id: string;
+  actor_destino_id: string;
+  tipo: TipoConexionRed;
+  descripcion: string;
+  monto?: number;
+  periodo: string;
+}
+
+export interface RedGraphData {
+  nodes: { id: string; label: string; tipo: TipoActor; status: StatusLegal; labelShort: string }[];
+  edges: { id: string; source: string; target: string; label: string; tipo: TipoConexionRed; weight: number }[];
 }

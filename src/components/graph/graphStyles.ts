@@ -1,20 +1,20 @@
 export const nodeColors: Record<string, string> = {
-  persona: '#3b82f6',
-  empresa: '#10b981',
-  institucion: '#8b5cf6',
-  organismo: '#f59e0b',
-  caso: '#ef4444',
-  otro: '#6b7280',
+  persona: '#1d4ed8',     // Azul tinta
+  empresa: '#d97706',     // Ámbar vintage
+  institucion: '#6d28d9', // Púrpura archivo
+  organismo: '#15803d',   // Verde contable
+  caso: '#b91c1c',        // Rojo sello oficial
+  otro: '#4b5563',        // Grafito
 };
 
 export const edgeColors: Record<string, string> = {
-  trabaja_con: '#3b82f6',
-  familiar: '#ec4899',
-  financiero: '#10b981',
-  comercial: '#f59e0b',
-  politico: '#8b5cf6',
-  involucra: '#6b7280',
-  otro: '#9ca3af',
+  trabaja_con: '#1d4ed8',
+  familiar: '#be185d',
+  financiero: '#b91c1c',
+  comercial: '#d97706',
+  politico: '#6d28d9',
+  involucra: '#4b5563',
+  otro: '#78716c',
 };
 
 export const graphStyles = [
@@ -24,24 +24,25 @@ export const graphStyles = [
       label: 'data(label)',
       'background-color': (ele: { data: (key: string) => string }) => 
         nodeColors[ele.data('type')] || nodeColors.otro,
-      color: '#fff',
+      color: '#ffffff',
       'text-valign': 'center',
       'text-halign': 'center',
-      'font-size': '12px',
+      'font-size': '11px',
+      'font-family': 'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace',
       'font-weight': 'bold',
       width: (ele: { data: (key: string) => string }) => 
-        ele.data('type') === 'caso' ? 60 : 40,
+        ele.data('type') === 'caso' ? 64 : 44,
       height: (ele: { data: (key: string) => string }) => 
-        ele.data('type') === 'caso' ? 60 : 40,
+        ele.data('type') === 'caso' ? 64 : 44,
       'border-width': 2,
-      'border-color': '#fff',
+      'border-color': '#1c1917',
     },
   },
   {
     selector: 'node:active',
     style: {
-      'overlay-opacity': 0.2,
-      'overlay-color': '#3b82f6',
+      'overlay-opacity': 0.15,
+      'overlay-color': '#1c1917',
     },
   },
   {
@@ -49,15 +50,16 @@ export const graphStyles = [
     style: {
       label: 'data(label)',
       width: (ele: { data: (key: string) => number }) => 
-        Math.max(1, ele.data('weight') * 4),
+        Math.max(1.5, (ele.data('weight') || 1) * 3),
       'line-color': (ele: { data: (key: string) => string }) => 
         edgeColors[ele.data('type')] || edgeColors.otro,
       'target-arrow-color': (ele: { data: (key: string) => string }) => 
         edgeColors[ele.data('type')] || edgeColors.otro,
       'target-arrow-shape': 'triangle',
       'curve-style': 'bezier',
-      'font-size': '10px',
-      color: '#6b7280',
+      'font-size': '9px',
+      'font-family': 'ui-monospace, monospace',
+      color: '#78716c',
       'text-rotation': 'autorotate',
     },
   },
@@ -65,15 +67,15 @@ export const graphStyles = [
     selector: 'node:selected',
     style: {
       'border-width': 4,
-      'border-color': '#fbbf24',
-      'background-color': '#fbbf24',
+      'border-color': '#1c1917',
+      'background-color': '#f59e0b',
     },
   },
   {
     selector: 'edge:selected',
     style: {
       width: 4,
-      'line-color': '#fbbf24',
+      'line-color': '#1c1917',
     },
   },
 ];

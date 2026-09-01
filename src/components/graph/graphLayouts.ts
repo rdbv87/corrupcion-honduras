@@ -1,60 +1,55 @@
+import cytoscape from 'cytoscape';
+
 export type LayoutName = 'cose' | 'circle' | 'concentric' | 'breadthfirst' | 'grid' | 'random';
 
-export const layoutOptions: Record<LayoutName, Record<string, unknown>> = {
+export const layoutOptions: Record<LayoutName, cytoscape.LayoutOptions> = {
   cose: {
     name: 'cose',
-    animate: true,
-    animationDuration: 1000,
-    animationEasing: 'ease-in-out-cubic',
+    animate: false,
     nodeRepulsion: () => 8000,
     idealEdgeLength: () => 100,
     edgeElasticity: () => 100,
     gravity: 0.25,
     numIter: 1000,
     padding: 50,
-  },
+  } as cytoscape.LayoutOptions,
   circle: {
     name: 'circle',
-    animate: true,
-    animationDuration: 500,
+    animate: false,
     avoidOverlap: true,
     padding: 50,
-  },
+  } as cytoscape.LayoutOptions,
   concentric: {
     name: 'concentric',
-    animate: true,
-    animationDuration: 500,
+    animate: false,
     concentric: (node: { degree: () => number }) => {
       return node.degree();
     },
     levelWidth: () => 2,
     avoidOverlap: true,
     padding: 50,
-  },
+  } as cytoscape.LayoutOptions,
   breadthfirst: {
     name: 'breadthfirst',
-    animate: true,
-    animationDuration: 500,
+    animate: false,
     directed: false,
     spacingFactor: 1.5,
     avoidOverlap: true,
     padding: 50,
-  },
+  } as cytoscape.LayoutOptions,
   grid: {
     name: 'grid',
-    animate: true,
-    animationDuration: 500,
+    animate: false,
     avoidOverlap: true,
     condense: true,
     rows: undefined,
     padding: 50,
-  },
+  } as cytoscape.LayoutOptions,
   random: {
     name: 'random',
-    animate: true,
-    animationDuration: 500,
+    animate: false,
     padding: 50,
-  },
+  } as cytoscape.LayoutOptions,
 };
 
 export const layoutDescriptions: Record<LayoutName, string> = {
