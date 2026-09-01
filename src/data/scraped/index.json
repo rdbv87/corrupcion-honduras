@@ -1,0 +1,19 @@
+{
+  "ejecuciones": [
+    {
+      "generado_en": "2026-09-01T01:47:56.113Z",
+      "total_informes": 47,
+      "archivo": "informes-cna.json"
+    },
+    {
+      "generado_en": "2026-09-01T01:46:16.821Z",
+      "total_informes": 47,
+      "archivo": "informes-cna.json"
+    },
+    {
+      "generado_en": "2026-09-01T01:43:45.340Z",
+      "total_informes": 0,
+      "archivo": "informes-cna.json"
+    }
+  ]
+}

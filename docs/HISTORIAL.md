@@ -580,6 +580,39 @@ Componentes Redes (`src/components/redes/`):
 
 ---
 
+### Feature 013: Scraper CNA Estático + 5 Redes de Casos Emblemáticos ✅
+
+**SDD:** [`features/013-scraper-cna-estatico-redes/`](features/013-scraper-cna-estatico-redes/) (`spec.md`, `plan.md`, `tasks.md`)
+
+**Objetivo:** Adaptar el scraping del [CNA](https://www.cna.hn/) al stack estático (GitHub Pages), finalizar el catálogo a **5 redes** de casos emblemáticos y añadir al dashboard de KPIs la dimensión institucional de la lucha anticorrupción.
+
+**Cambios:**
+
+1. **Scraping estático del CNA (`npm run scrape`)**:
+   - `scripts/scrape-cna.ts` (nuevo) — script CLI que ejecuta el conector CNA y escribe los resultados como **JSON versionados** en `src/data/scraped/` (`informes-cna.json` + `index.json`).
+   - `src/data/scraped/index.ts` (nuevo) — barrel que expone el snapshot al frontend (build time).
+   - `package.json` — nuevo script `scrape` (`tsx scripts/scrape-cna.ts`) y devDependency `tsx`.
+   - **Hallazgo técnico:** el sitio CNA `/investigaciones/` es un hub de enlaces por año y renderiza su grid con JavaScript (Elementor/ANWP), por lo que el parseo de HTML (`scrapeInformesCna`) devolvía **0 resultados**. Se añadió `scrapeInformesCnaRest()` (`src/lib/scraper/cna.ts`) que usa la **WordPress REST API** (`/wp-json/wp/v2/posts?categories=207`), la cual devuelve título, link, fecha, extracto y el enlace al **PDF** de cada informe. Se extraen los **47 informes** actuales.
+
+2. **Cinco redes de corrupción finalizadas**:
+   - Datos en `src/data/redes/`. El catálogo pasa de 3 a 5 casos:
+     - `praf.ts` (nuevo) — **Desfalco al PRAF**: L.96,976,218 (US$3.9M) vía 596 contratos (Bono Juvenil + DiMujer), empresas de relleno e informes falsos. Fuentes: MP (FETCCOP), CNA, El Heraldo.
+     - `rosa-de-lobo.ts` (nuevo) — **Caja Chica de la Dama**: red de blanqueo, L.16M+ (US$680k), 70+ cheques a 9 personas, L.12,272,051 transferidos a cuenta personal. Fuentes: MACCIH-OEA, MP (UFECIC/UFERCO), CNA.
+     - `src/data/redes/index.ts` — agregador actualizado con los 5 casos.
+   - Los casos existentes (IHSS, Hospitales Móviles, Pandora) permanecen intactos.
+
+3. **KPIs institucionales del CNA**:
+   - `src/data/kpi/indicators.ts` — 4 indicadores nuevos en área `general` (casos presentados, judicializados, en impunidad, perjuicio identificado) con fuente a `/opca` e `/indicadores`.
+   - `src/data/kpi/institucional.ts` (nuevo) — series con cifras publicadas por el CNA.
+   - `src/data/kpi/index.ts` — `institucionalData` agregado a `allKPIData`.
+
+**Pruebas:**
+- `src/data/redes/__tests__/redes-data.test.ts` (nuevo) — consistencia referencial/tipado de PRAF y Rosa de Lobo.
+- `src/data/scraped/__tests__/scraped-data.test.ts` (nuevo) — snapshot del scraping.
+- `npm test`: **22 tests / 4 suites** pasan. `npm run lint` sin errores. `npm run build` (export estático) genera 7 páginas sin errores.
+
+---
+
 ## Pendiente (Próximos Pasos)
 
 ### Paso 9: PostgreSQL + Autenticación

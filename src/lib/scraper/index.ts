@@ -3,6 +3,7 @@ export { scrapeSources, getSourceById, getEnabledSources } from './sources';
 export { scrapeSource, scrapeAllSources } from './engine';
 export {
   scrapeInformesCna,
+  scrapeInformesCnaRest,
   detectMontos,
   CNA_SOURCE_ID,
   CNA_SOURCE_NAME,

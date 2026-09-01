@@ -5,6 +5,7 @@ export { employmentData } from './employment';
 export { infrastructureData } from './infrastructure';
 export { technologyData } from './technology';
 export { corruptionData } from './corruption';
+export { institucionalData } from './institucional';
 
 import { KPIDataPoint } from '@/types/corruption';
 import { healthData } from './health';
@@ -13,6 +14,7 @@ import { employmentData } from './employment';
 import { infrastructureData } from './infrastructure';
 import { technologyData } from './technology';
 import { corruptionData } from './corruption';
+import { institucionalData } from './institucional';
 
 export const allKPIData: KPIDataPoint[] = [
   ...healthData,
@@ -21,4 +23,5 @@ export const allKPIData: KPIDataPoint[] = [
   ...infrastructureData,
   ...technologyData,
   ...corruptionData,
+  ...institucionalData,
 ];

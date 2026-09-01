@@ -1,0 +1,435 @@
+{
+  "fuente": {
+    "id": "cna",
+    "nombre": "Consejo Nacional Anticorrupción",
+    "url": "https://www.cna.hn"
+  },
+  "generado_en": "2026-09-01T01:47:56.113Z",
+  "total_informes": 47,
+  "informes": [
+    {
+      "titulo": "El retorno de Juan Orlando Hernández: Entre la justicia y la impunidad",
+      "url": "https://www.cna.hn/el-retorno-de-juan-orlando-hernandez-entre-la-justicia-y-la-impunidad/",
+      "tipo": "informe",
+      "fecha_publicacion": "2026-07-27T14:42:40.000Z",
+      "resumen": "Descargar en PDF",
+      "pdfUrl": "https://www.cna.hn/wp-content/uploads/2026/07/CNA_InformeRetornoJOH_Julio26_I-PUB.pdf",
+      "montosDetectados": []
+    },
+    {
+      "titulo": "Entre el poder y el abuso: el costo de torcer las reglas",
+      "url": "https://www.cna.hn/entre-el-poder-y-el-abuso-el-costo-de-torcer-las-reglas/",
+      "tipo": "informe",
+      "fecha_publicacion": "2026-05-27T17:03:52.000Z",
+      "resumen": "Descargar en PDF",
+      "pdfUrl": "https://www.cna.hn/wp-content/uploads/2026/05/CNA_InformePrestamoOABI_Mayo26_I-PUB.pdf",
+      "montosDetectados": []
+    },
+    {
+      "titulo": "Cuatro años después del voto: del tropiezo inicial al desenlace inevitable",
+      "url": "https://www.cna.hn/cuatro-anos-despues-del-voto-del-tropiezo-inicial-al-desenlace-inevitable/",
+      "tipo": "informe",
+      "fecha_publicacion": "2026-02-04T16:00:00.000Z",
+      "resumen": "Descargar en PDF",
+      "pdfUrl": "https://www.cna.hn/wp-content/uploads/2026/02/CNA_InformeMIC_Ene26_I-PUB.pdf",
+      "montosDetectados": []
+    },
+    {
+      "titulo": "Informe de Observación Preelectoral II Edición",
+      "url": "https://www.cna.hn/informe-de-observacion-preelectoral-ii-edicion/",
+      "tipo": "informe",
+      "fecha_publicacion": "2025-11-19T18:40:45.000Z",
+      "resumen": "Descargar en PDF",
+      "pdfUrl": "https://www.cna.hn/wp-content/uploads/2025/11/CNA_InformeObservacion_18Nov_I-PUB.pdf",
+      "montosDetectados": []
+    },
+    {
+      "titulo": "I Edición del Informe de observación pre-electoral Elecciones generales 2025",
+      "url": "https://www.cna.hn/i-edicion-del-informe-de-observacion-pre-electoral-elecciones-generales-2025/",
+      "tipo": "informe",
+      "fecha_publicacion": "2025-09-11T00:43:21.000Z",
+      "resumen": "Descargar en PDF",
+      "pdfUrl": "https://www.cna.hn/wp-content/uploads/2025/09/CNA_InformeObservacionPre_Sept25_I-PUB-II.pdf",
+      "montosDetectados": []
+    },
+    {
+      "titulo": "Cuarto informe del MIC, Del Congreso que votamos, al Congreso que tenemos",
+      "url": "https://www.cna.hn/cuarto-informe-del-mic-del-congreso-que-votamos-al-congreso-que-tenemos/",
+      "tipo": "informe",
+      "fecha_publicacion": "2025-02-20T19:35:58.000Z",
+      "resumen": "Descargar en PDF",
+      "pdfUrl": "https://www.cna.hn/wp-content/uploads/2025/02/InformeMIC25v2.pdf",
+      "montosDetectados": []
+    },
+    {
+      "titulo": "Derroche injustificado en la compra de pupitres",
+      "url": "https://www.cna.hn/derroche-injustificado-en-la-compra-de-pupitres/",
+      "tipo": "informe",
+      "fecha_publicacion": "2024-11-21T21:24:23.000Z",
+      "resumen": "Descargar en PDF",
+      "pdfUrl": "https://www.cna.hn/wp-content/uploads/2024/11/CasoSEDUC_I-INT.pdf",
+      "montosDetectados": []
+    },
+    {
+      "titulo": "Subvenciones, subsidios y fondos de ayuda social en el Legislativo: Excesos y opacidad",
+      "url": "https://www.cna.hn/subvenciones-subsidios-y-fondos-de-ayuda-social-en-el-legislativo-excesos-y-opacidad/",
+      "tipo": "informe",
+      "fecha_publicacion": "2024-11-07T19:42:57.000Z",
+      "resumen": "Descargar en PDF",
+      "pdfUrl": "https://www.cna.hn/wp-content/uploads/2024/11/CNA_Informe-de-Subvenciones-subsidios-y-ayuda-social-en-el-CN_I-PUB.pdf",
+      "montosDetectados": []
+    },
+    {
+      "titulo": "Análisis: factores determinantes de la crisis en las empresas estatales.",
+      "url": "https://www.cna.hn/analisis-factores-determinantes-de-la-crisis-en-las-empresas-estatales/",
+      "tipo": "informe",
+      "fecha_publicacion": "2024-10-31T18:47:00.000Z",
+      "resumen": "Descargar en PDF",
+      "pdfUrl": "https://www.cna.hn/wp-content/uploads/2024/10/ANALISISFactCrisisEmpv2_I-INT-1.pdf",
+      "montosDetectados": []
+    },
+    {
+      "titulo": "Amnistía la nueva inmunidad política",
+      "url": "https://www.cna.hn/amnistia-la-nueva-inmunidad-politica/",
+      "tipo": "informe",
+      "fecha_publicacion": "2024-09-17T19:07:48.000Z",
+      "resumen": "Descargar en PDF",
+      "pdfUrl": "https://www.cna.hn/wp-content/uploads/2024/09/CNA_Amnistia_I-PUB.pdf",
+      "montosDetectados": []
+    },
+    {
+      "titulo": "El alumbrado de la corrupción",
+      "url": "https://www.cna.hn/el-alumbrado-de-la-corrupcion/",
+      "tipo": "informe",
+      "fecha_publicacion": "2024-09-12T02:03:52.000Z",
+      "resumen": "Descargar en PDF",
+      "pdfUrl": "https://www.cna.hn/wp-content/uploads/2024/09/InfAlcaldiaBelen_I-PUB.pdf",
+      "montosDetectados": []
+    },
+    {
+      "titulo": "Contrataciones irregulares en la alcaldía municipal de La Ceiba",
+      "url": "https://www.cna.hn/contrataciones-irregulares-en-la-alcaldia-municipal-de-la-ceiba/",
+      "tipo": "informe",
+      "fecha_publicacion": "2024-09-11T20:00:45.000Z",
+      "resumen": "Descargar en PDF",
+      "pdfUrl": "https://www.cna.hn/wp-content/uploads/2024/09/InfAlcaldiaLaCeiba_I-PUB.pdf",
+      "montosDetectados": []
+    },
+    {
+      "titulo": "Irregularidades en el proyecto de Gracias",
+      "url": "https://www.cna.hn/irregularidades-en-el-proyecto-de-gracias/",
+      "tipo": "informe",
+      "fecha_publicacion": "2024-09-11T19:56:51.000Z",
+      "resumen": "Descargar en PDF",
+      "pdfUrl": "https://www.cna.hn/wp-content/uploads/2024/09/InfAlcaldiaGracias_I-PUB.pdf",
+      "montosDetectados": []
+    },
+    {
+      "titulo": "Irregularidades en el proyecto de Comayagua",
+      "url": "https://www.cna.hn/irregularidades-en-el-proyecto-de-comayagua/",
+      "tipo": "informe",
+      "fecha_publicacion": "2024-09-11T19:52:10.000Z",
+      "resumen": "Descargar en PDF",
+      "pdfUrl": "https://www.cna.hn/wp-content/uploads/2024/09/InfAlcaldiaComayagua_I-PUB.pdf",
+      "montosDetectados": []
+    },
+    {
+      "titulo": "Análisis del juicio político",
+      "url": "https://www.cna.hn/analisis-del-juicio-politico/",
+      "tipo": "informe",
+      "fecha_publicacion": "2024-09-06T15:40:22.000Z",
+      "resumen": "Descargar en PDF",
+      "pdfUrl": "https://www.cna.hn/wp-content/uploads/2024/09/AnalisisJuicioPolitico_I-PUB.pdf",
+      "montosDetectados": []
+    },
+    {
+      "titulo": "Índice de eficiencia del gasto público",
+      "url": "https://www.cna.hn/indice-de-eficiencia-del-gasto-publico-una-evaluacion-al-gasto-del-sector-publico/",
+      "tipo": "informe",
+      "fecha_publicacion": "2024-08-21T19:10:01.000Z",
+      "resumen": "Descargar en PDF",
+      "pdfUrl": "https://www.cna.hn/wp-content/uploads/2024/08/Indice-de-eficiencia-del-gasto-publico.pdf",
+      "montosDetectados": []
+    },
+    {
+      "titulo": "Relación entre la corrupción y el desarrollo humano desde un enfoque econométrico",
+      "url": "https://www.cna.hn/relacion-entre-la-corrupcion-y-el-desarrollo-humano-desde-un-enfoque-econometrico/",
+      "tipo": "informe",
+      "fecha_publicacion": "2024-08-21T19:05:37.000Z",
+      "resumen": "Descargar en PDF",
+      "pdfUrl": "https://www.cna.hn/wp-content/uploads/2024/08/Relacion-entre-la-corrupcion-y-el-desarrollo-humano-desde-un-enfoque-econometrico-2.pdf",
+      "montosDetectados": []
+    },
+    {
+      "titulo": "Contrataciones irregulares en el Hospital San Felipe",
+      "url": "https://www.cna.hn/contrataciones-irregulares-en-el-hospital-san-felipe/",
+      "tipo": "informe",
+      "fecha_publicacion": "2024-08-20T20:06:12.000Z",
+      "resumen": "Descargar en PDF",
+      "pdfUrl": "https://www.cna.hn/wp-content/uploads/2024/08/CNA_CasoHospitalSanFelipe_I-PUB.pdf",
+      "montosDetectados": []
+    },
+    {
+      "titulo": "Resumen del juicio del expresidente, Juan Orlando Hernández",
+      "url": "https://www.cna.hn/analisis-del-juicio-de-joh/",
+      "tipo": "informe",
+      "fecha_publicacion": "2024-08-08T01:32:28.000Z",
+      "resumen": "Descargar en PDF",
+      "pdfUrl": "https://www.cna.hn/wp-content/uploads/2024/08/AnalisisJuiciodeJOH_I-PUB.pdf",
+      "montosDetectados": []
+    },
+    {
+      "titulo": "Narco-Estatización: ¿Por qué se considera que Honduras es un narcoestado?",
+      "url": "https://www.cna.hn/honduras-narco-estado/",
+      "tipo": "informe",
+      "fecha_publicacion": "2024-08-07T02:08:34.000Z",
+      "resumen": "Descargar en PDF",
+      "pdfUrl": "https://www.cna.hn/wp-content/uploads/2024/08/HondurasNarcoEstado_I-PUB.pdf",
+      "montosDetectados": []
+    },
+    {
+      "titulo": "Ley contra el nepotismo en Honduras",
+      "url": "https://www.cna.hn/ley-contra-el-nepotismo-en-honduras/",
+      "tipo": "informe",
+      "fecha_publicacion": "2024-07-04T19:07:59.000Z",
+      "resumen": "Descargar en PDF",
+      "pdfUrl": "https://www.cna.hn/wp-content/uploads/2024/07/LeycontraNepotismo_I-PUB.pdf",
+      "montosDetectados": []
+    },
+    {
+      "titulo": "Redes estrategicas de concentracion de poder",
+      "url": "https://www.cna.hn/redes-estrategicas-de-concentracion-de-poder-2/",
+      "tipo": "informe",
+      "fecha_publicacion": "2024-07-03T01:42:12.000Z",
+      "resumen": "NOTA DE PRENSAMillonarios recursos del Estado se destinan a mantener las redes estratégicasde concentración de poderEl CNA presenta una propuesta de «Ley contra el nepotismo» para ir más allá de lacondena moral contra esta práctica que está enraizada en la administración públicaTegucigalpa, M.D.C, 02 de julio de 2024. Una abultada burocracia con tres familiasacaparando puestos, [&hellip;]",
+      "pdfUrl": "https://www.cna.hn/wp-content/uploads/2024/07/CNA_Nota_de_prensa_Redes_estrategicas_de_concentracion_de_poder_I-PUB.pdf",
+      "montosDetectados": []
+    },
+    {
+      "titulo": "Redes estratégicas de concentración de poder",
+      "url": "https://www.cna.hn/redes-estrategicas-de-concentracion-de-poder/",
+      "tipo": "informe",
+      "fecha_publicacion": "2024-07-02T19:18:04.000Z",
+      "resumen": "Descargar en PDF",
+      "pdfUrl": "https://www.cna.hn/wp-content/uploads/2024/07/ConcentraciondePoder_I-PUB-2.pdf",
+      "montosDetectados": []
+    },
+    {
+      "titulo": "Segunda edición: Parálisis sanitaria. Región oriente",
+      "url": "https://www.cna.hn/segunda-edicion-paralisis-sanitaria-region-oriente/",
+      "tipo": "informe",
+      "fecha_publicacion": "2024-07-01T21:11:07.000Z",
+      "resumen": "Descargar en PDF",
+      "pdfUrl": "https://www.cna.hn/wp-content/uploads/2024/07/InfAuditHospitales22-23EtapaVIIIR_I-PUB.pdf",
+      "montosDetectados": []
+    },
+    {
+      "titulo": "Segunda edición: Parálisis sanitaria. Región norte-atlántica",
+      "url": "https://www.cna.hn/segunda-edicion-paralisis-sanitaria-region-norte-atlantica/",
+      "tipo": "informe",
+      "fecha_publicacion": "2024-06-19T23:40:53.000Z",
+      "resumen": "Descargar en PDF",
+      "pdfUrl": "https://www.cna.hn/wp-content/uploads/2024/06/InfAuditHospitales22-23EtapaVIR_I-PUB.pdf",
+      "montosDetectados": []
+    },
+    {
+      "titulo": "Segunda edición: Parálisis sanitaria. Hospital regional de Puerto Lempira",
+      "url": "https://www.cna.hn/segunda-edicion-paralisis-sanitaria-hospital-regional-de-puerto-lempira/",
+      "tipo": "informe",
+      "fecha_publicacion": "2024-06-08T01:29:33.000Z",
+      "resumen": "Descargar en PDF",
+      "pdfUrl": "https://www.cna.hn/wp-content/uploads/2024/06/InfAuditHospitales22-23EtapaV_I-PUB.pdf",
+      "montosDetectados": []
+    },
+    {
+      "titulo": "Segunda edición: Parálisis sanitaria. Región occidente",
+      "url": "https://www.cna.hn/segunda-edicion-paralisis-sanitaria-region-occidente/",
+      "tipo": "informe",
+      "fecha_publicacion": "2024-05-31T02:12:16.000Z",
+      "resumen": "Descargar en PDF",
+      "pdfUrl": "https://www.cna.hn/wp-content/uploads/2024/05/InfAuditHospitales22-23EtapaIIIReducido_I-PUB.pdf",
+      "montosDetectados": []
+    },
+    {
+      "titulo": "Parálisis sanitaria. Región centro-occidente",
+      "url": "https://www.cna.hn/paralisis-sanitaria-region-centro-occidente/",
+      "tipo": "informe",
+      "fecha_publicacion": "2024-05-23T20:43:53.000Z",
+      "resumen": "Descargar en PDF",
+      "pdfUrl": "https://www.cna.hn/wp-content/uploads/2024/05/InfAuditHospitales22-23EtapaIIReducido_I-PUB.pdf",
+      "montosDetectados": []
+    },
+    {
+      "titulo": "Parálisis sanitaria. Región oriente-sur",
+      "url": "https://www.cna.hn/paralisis-sanitaria-region-sur-oriente/",
+      "tipo": "informe",
+      "fecha_publicacion": "2024-05-16T02:23:08.000Z",
+      "resumen": "Descargar en PDF",
+      "pdfUrl": "https://www.cna.hn/wp-content/uploads/2024/05/InfAuditHospitales22-23EtapaIReducido_I-PUB.pdf",
+      "montosDetectados": []
+    },
+    {
+      "titulo": "Parálisis sanitaria. Región central",
+      "url": "https://www.cna.hn/paralisis-sanitaria-region-central/",
+      "tipo": "informe",
+      "fecha_publicacion": "2024-05-10T02:02:24.000Z",
+      "resumen": "Descargar en PDF",
+      "pdfUrl": "https://www.cna.hn/wp-content/uploads/2024/05/InfAuditHospitales22-23EtapaIV_I-PUB_reducido.pdf",
+      "montosDetectados": []
+    },
+    {
+      "titulo": "En el Congreso del Pueblo las ilegalidades se repiten",
+      "url": "https://www.cna.hn/en-el-congreso-del-pueblo-las-ilegalidades-se-repiten/",
+      "tipo": "informe",
+      "fecha_publicacion": "2024-05-06T18:27:35.000Z",
+      "resumen": "Descargar en PDF",
+      "pdfUrl": "https://www.cna.hn/wp-content/uploads/2024/05/InformeCongdelPueblo_I-PUB-1.pdf",
+      "montosDetectados": []
+    },
+    {
+      "titulo": "Segunda edición: Parálisis sanitaria. Hospital de Roatán",
+      "url": "https://www.cna.hn/paralisis-sanitaria-auditoria-especializada-al-sistema-sanitario-nacional-2/",
+      "tipo": "informe",
+      "fecha_publicacion": "2024-05-03T01:01:08.000Z",
+      "resumen": "Descargar en PDF",
+      "pdfUrl": "https://www.cna.hn/wp-content/uploads/2024/05/InfAuditHospitales22-23EtapaVII_I-PUB_reducido.pdf",
+      "montosDetectados": []
+    },
+    {
+      "titulo": "La Acequia. Cárcel en construcción eterna",
+      "url": "https://www.cna.hn/la-acequia-carcel-en-construccion-eterna/",
+      "tipo": "informe",
+      "fecha_publicacion": "2024-04-16T18:40:53.000Z",
+      "resumen": "Descargar en PDF",
+      "pdfUrl": "https://www.cna.hn/wp-content/uploads/2024/04/InformeACEQUIAMonumentos_I-PUB.pdf",
+      "montosDetectados": []
+    },
+    {
+      "titulo": "Clientelismo y corrupción en SEDIS",
+      "url": "https://www.cna.hn/clientelismo-y-corrupcion-en-sedis/",
+      "tipo": "informe",
+      "fecha_publicacion": "2024-04-09T00:52:12.000Z",
+      "resumen": "Descargar en PDF",
+      "pdfUrl": "https://www.cna.hn/wp-content/uploads/2024/04/ClientelismoyCorrupcionSEDIS_I-PUB-1.pdf",
+      "montosDetectados": []
+    },
+    {
+      "titulo": "Segunda edición: Parálisis sanitaria",
+      "url": "https://www.cna.hn/cna__infaudithospitales-26163/",
+      "tipo": "informe",
+      "fecha_publicacion": "2024-03-05T16:00:00.000Z",
+      "resumen": "Descargar en PDF",
+      "pdfUrl": "https://www.cna.hn/wp-content/uploads/2024/03/CNA__InfAuditHospitales22-23_I-PUB.pdf",
+      "montosDetectados": []
+    },
+    {
+      "titulo": "Una radiografía ciudadana a la gestión parlamentaria en el año 2023",
+      "url": "https://www.cna.hn/cna_iii-informe-del-mic/",
+      "tipo": "informe",
+      "fecha_publicacion": "2024-02-05T17:00:00.000Z",
+      "resumen": "Descargar en PDF",
+      "pdfUrl": "https://www.cna.hn/wp-content/uploads/2024/02/CNA_III-Informe-del-MIC_I-PUB.pdf",
+      "montosDetectados": []
+    },
+    {
+      "titulo": "Inseguridad Jurídica en la UPNFM",
+      "url": "https://www.cna.hn/inseguridad-juridica-en-la-upnfm/",
+      "tipo": "informe",
+      "fecha_publicacion": "2024-01-31T16:51:15.000Z",
+      "resumen": "Descargar en PDF",
+      "pdfUrl": "https://www.cna.hn/wp-content/uploads/2024/01/CNA_InseguridadJuridicaUPN-FM_I-PUB.pdf",
+      "montosDetectados": []
+    },
+    {
+      "titulo": "Concentración de poder",
+      "url": "https://www.cna.hn/concentracion-de-poder/",
+      "tipo": "informe",
+      "fecha_publicacion": "2023-07-04T16:14:17.000Z",
+      "resumen": "Descargar en PDF",
+      "pdfUrl": "https://www.cna.hn/wp-content/uploads/2024/05/CNA_INFORME_CONCENTRACION_DE_PODER_2022_2026_Mayo_2023_I-PUB.pdf",
+      "montosDetectados": []
+    },
+    {
+      "titulo": "Entre el despilfarro y la falsa percepción de seguridad",
+      "url": "https://www.cna.hn/entre-el-despilfarro-y-la-falsa-percepcion-de-seguridad/",
+      "tipo": "informe",
+      "fecha_publicacion": "2023-06-08T15:50:00.000Z",
+      "resumen": "Descargar en PDF",
+      "pdfUrl": "https://www.cna.hn/wp-content/uploads/2023/06/Informe_Entre_Despilfarro_Tasa_Seguridad_I-PUB_CNA_VP.pdf",
+      "montosDetectados": []
+    },
+    {
+      "titulo": "El absoluto silencio",
+      "url": "https://www.cna.hn/cna_informe-el-silencio-absoluto_junio-de-2023/",
+      "tipo": "informe",
+      "fecha_publicacion": "2023-05-22T15:50:00.000Z",
+      "resumen": "Descargar en PDF",
+      "pdfUrl": "https://www.cna.hn/wp-content/uploads/2023/06/CNA_Informe-El-silencio-absoluto_junio-de-2023.pdf",
+      "montosDetectados": []
+    },
+    {
+      "titulo": "El CNA denuncia ante el MP nombramiento inconstitucional de actuales procuradores de la República",
+      "url": "https://www.cna.hn/el-cna-denuncia-ante-el-mp-nombramiento-inconstitucional-de-actuales-procuradores-de-la-republica/",
+      "tipo": "informe",
+      "fecha_publicacion": "2023-01-20T19:53:29.000Z",
+      "resumen": "Manuel Antonio Díaz Gáleas y Tomás Emilio Andrade Rodas incurren en un tipo penal al no reunir los requisitos exigidos en la Constitución. Tegucigalpa, D.C., 17 de enero de 2023. El Consejo Nacional Anticorrupción (CNA) presentó hoy una denuncia ante el Ministerio Público (MP) contra el Procurador General de la República, Manuel Antonio Díaz Gáleas, [&hellip;]",
+      "montosDetectados": []
+    },
+    {
+      "titulo": "Defensores del pueblo y su falsa promesa de ley",
+      "url": "https://www.cna.hn/defensores-del-estado-y-su-falsa-promesa-de-ley/",
+      "tipo": "informe",
+      "fecha_publicacion": "2023-01-17T22:01:32.000Z",
+      "resumen": "Descargar en PDF",
+      "pdfUrl": "https://www.cna.hn/wp-content/uploads/2023/01/Informe-Denuncia-PGR.pdf",
+      "montosDetectados": []
+    },
+    {
+      "titulo": "Perfiles ciudadanos: candidatos a la nueva Corte Suprema de Justicia",
+      "url": "https://www.cna.hn/perfiles-ciudadanos-candidatos-a-la-nueva-corte-suprema-de-justicia/",
+      "tipo": "informe",
+      "fecha_publicacion": "2022-12-25T00:09:06.000Z",
+      "resumen": "Descargar en PDF",
+      "pdfUrl": "https://www.cna.hn/wp-content/uploads/2022/12/Perfiles-ciudadanos-candidatos-a-la-nueva-Corte-Suprema-de-Justicia.pdf",
+      "montosDetectados": []
+    },
+    {
+      "titulo": "<strong>Avión presidencial: un legado de corrupción y despilfarro</strong>",
+      "url": "https://www.cna.hn/avion-presidencial-un-legado-de-corrupcion-y-despilfarro/",
+      "tipo": "informe",
+      "fecha_publicacion": "2022-11-23T23:47:46.000Z",
+      "resumen": "Investigación del CNA evidencia cómo se usaron los fondos de la Tasa de Seguridad Poblacional en la adquisición y mantenimiento de una aeronave, además de otras transacciones que presentan indicios de actividades financieras irregulares. Tegucigalpa, D. C., 23 de noviembre de 2022. El exceso y abuso en el manejo de los fondos de la Tasa [&hellip;]",
+      "montosDetectados": [
+        "L 1,077,713,684.68",
+        "L 302,269,153.62",
+        "L 670,803.99"
+      ]
+    },
+    {
+      "titulo": "<strong>El CNA presenta hallazgos sobre la parálisis sanitaria en Honduras &nbsp;</strong>",
+      "url": "https://www.cna.hn/el-cna-presenta-hallazgos-sobre-la-paralisis-sanitaria-en-honduras/",
+      "tipo": "informe",
+      "fecha_publicacion": "2022-10-18T15:30:00.000Z",
+      "resumen": "A través de una auditoría especializada, esta instancia de sociedad civil visitó los 32 hospitales a nivel nacional. Tegucigalpa, D. C., martes 18 de octubre de 2022. Un cuento de terror hospitalario se vive a diario en los centros asistenciales de Honduras. A través de una auditoría especializada, derivada del convenio de cooperación que se [&hellip;]",
+      "montosDetectados": []
+    },
+    {
+      "titulo": "Condonación simulada de compensación pone en precario las finanzas de la ENEE",
+      "url": "https://www.cna.hn/condonacion-simulada-de-compensacion-pone-en-precario-las-finanzas-de-la-enee/",
+      "tipo": "informe",
+      "fecha_publicacion": "2022-10-13T15:50:00.000Z",
+      "resumen": "Como resultado de una reciente investigación, el Consejo Nacional Anticorrupción denuncia ante el Ministerio Público a cuatro exfuncionarios de la estatal eléctrica Tegucigalpa, D.C., jueves 13 de octubre de 2022. Una condonación simulada de compensación generó un perjuicio económico a la Empresa Nacional de Energía Eléctrica (ENEE) que sobrepasa los 142 millones de lempiras. A [&hellip;]",
+      "montosDetectados": [
+        "L 122.979.319.46",
+        "L 142.140.708.01"
+      ]
+    },
+    {
+      "titulo": "Exceso de poder de un exgerente general de la ENEE provoca millonario perjucio económico",
+      "url": "https://www.cna.hn/nota-de-eprensa/",
+      "tipo": "informe",
+      "fecha_publicacion": "2022-07-20T19:48:45.000Z",
+      "montosDetectados": []
+    }
+  ]
+}

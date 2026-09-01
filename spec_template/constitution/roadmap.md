@@ -11,6 +11,7 @@ _Plan de evolución y estado de las features de la plataforma Corrupción Hondur
 5. **005 · Motor Inicial de Scraping** — Scraper base para portales de noticias y fuentes oficiales con control de tasa y extracción de metadatos.
 6. **006 · Conector Especializado de Informes CNA (https://www.cna.hn/)** — Extractor e indexador automático de informes de investigación, líneas de denuncia, montos de perjuicio y expedientes del Consejo Nacional Anticorrupción.
 7. **007 · Panel de Administración y Edición de Redes** — Interfaz administrativa para registrar, editar, relacionar entidades y actualizar el estado procesal y las evidencias de cada caso emblemático.
+8. **013 · Scraper CNA Estático + 5 Redes de Casos Emblemáticos** — Scraping estático del CNA vía WordPress REST API (`npm run scrape`) generando datos versionados consumibles en GitHub Pages; finalización del catálogo a **5 redes** (IHSS, Hospitales Móviles, Pandora, **PRAF**, **Rosa de Lobo**) y KPIs institucionales de la lucha anticorrupción del CNA.
 
 ## Siguiente 🔜
 
