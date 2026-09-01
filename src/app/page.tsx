@@ -1,188 +1,74 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
-import CytoscapeGraph from '@/components/graph/CytoscapeGraph';
-import { SearchBar, Filters, FilterState, DataTable, DataTableColumn } from '@/components/search';
-import { buildGraphData } from '@/components/graph/graphUtils';
-import { layoutOptions, layoutDescriptions, LayoutName } from '@/components/graph/graphLayouts';
-import {
-  GraphNode, GraphEdge, Caso, Entidad, EventoTemporal,
-  KPIIndicator, CasoRed,
-} from '@/types/corruption';
-import { Timeline } from '@/components/timeline';
-import { sampleCasos, sampleEntidades, sampleEventos } from '@/data/sample';
+import { useEffect, useState } from 'react';
+import { ActorDetail, CasoSelector, RedCorrupcion } from '@/components/redes';
+import { ActorRed, CasoRed, ConexionRed, RedGraphData } from '@/types/corruption';
+import { allCasosRed, allActoresRed, getActoresByCaso, getConexionesByCaso } from '@/data/redes';
 import { kpiIndicators } from '@/data/kpi';
-import { allCasosRed } from '@/data/redes';
+import { KPIIndicator } from '@/types/corruption';
 
-interface SearchResult {
-  type: string;
-  id: string;
-  titulo: string;
-  descripcion?: string;
-  relevance: number;
+const actorColorsMap: Record<string, string> = {
+  funcionario: '#ef4444',
+  empresario: '#f59e0b',
+  empresa: '#8b5cf6',
+  testaferro: '#6b7280',
+  politico: '#3b82f6',
+  proveedor: '#10b981',
+};
+
+function formatUsdM(monto: number): string {
+  if (monto >= 1000000000) return `${(monto / 1000000000).toFixed(2)}B`;
+  if (monto >= 1000000) return `${(monto / 1000000).toFixed(1)}M`;
+  return monto.toLocaleString('es-HN');
 }
 
-type MainTab = 'search' | 'casos' | 'entidades' | 'timeline';
-
-const casoColumns: DataTableColumn<Caso>[] = [
-  { key: 'titulo', label: 'Título' },
-  {
-    key: 'status',
-    label: 'Estado',
-    render: (item) => (
-      <span
-        className={`badge ${
-          item.status === 'abierto'
-            ? 'badge-green'
-            : item.status === 'investigacion'
-              ? 'badge-yellow'
-              : item.status === 'cerrado'
-                ? 'badge-gray'
-                : 'badge-red'
-        }`}
-      >
-        {item.status}
-      </span>
-    ),
-  },
-  {
-    key: 'monto_estimado',
-    label: 'Monto',
-    render: (item) =>
-      item.monto_estimado
-        ? `L. ${item.monto_estimado.toLocaleString()}`
-        : '-',
-  },
-  {
-    key: 'fecha_inicio',
-    label: 'Fecha Inicio',
-    render: (item) => new Date(item.fecha_inicio).toLocaleDateString('es-HN'),
-  },
-];
-
-const entidadColumns: DataTableColumn<Entidad>[] = [
-  { key: 'nombre', label: 'Nombre' },
-  {
-    key: 'tipo',
-    label: 'Tipo',
-    render: (item) => (
-      <span className="capitalize">{item.tipo}</span>
-    ),
-  },
-  { key: 'ciudad', label: 'Ciudad' },
-  { key: 'pais', label: 'País' },
-];
-
 export default function Home() {
-  const [currentLayout, setCurrentLayout] = useState<LayoutName>('cose');
-  const [selectedNode, setSelectedNode] = useState<GraphNode | null>(null);
-  const [selectedEdge, setSelectedEdge] = useState<GraphEdge | null>(null);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [filters, setFilters] = useState<FilterState>({});
-  const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
-  const [filteredCasos, setFilteredCasos] = useState<Caso[]>(sampleCasos);
-  const [filteredEntidades, setFilteredEntidades] = useState<Entidad[]>(sampleEntidades);
-  const [activeTab, setActiveTab] = useState<MainTab>('search');
-  const [loading, setLoading] = useState(false);
-  const [eventos, setEventos] = useState<EventoTemporal[]>(sampleEventos);
-  const [selectedCasoId, setSelectedCasoId] = useState<string | undefined>();
-
-  // KPI state
+  const [casos, setCasos] = useState<CasoRed[]>([]);
+  const [selectedCaso, setSelectedCaso] = useState<CasoRed | null>(null);
+  const [graphData, setGraphData] = useState<RedGraphData | null>(null);
+  const [actores, setActores] = useState<ActorRed[]>([]);
+  const [conexiones, setConexiones] = useState<ConexionRed[]>([]);
+  const [selectedActor, setSelectedActor] = useState<ActorRed | null>(null);
   const [kpiIndicatorsList, setKpiIndicatorsList] = useState<KPIIndicator[]>([]);
-  const [redesCasosList, setRedesCasosList] = useState<CasoRed[]>([]);
-
-  // Filtrado local de casos
-  useEffect(() => {
-    let result = [...sampleCasos];
-    if (searchQuery) {
-      const q = searchQuery.toLowerCase();
-      result = result.filter((c) => c.titulo.toLowerCase().includes(q) || c.descripcion.toLowerCase().includes(q));
-    }
-    if (filters.status) {
-      result = result.filter((c) => c.status === filters.status);
-    }
-    if (filters.monto_min) {
-      const min = Number(filters.monto_min);
-      result = result.filter((c) => (c.monto_estimado || 0) >= min);
-    }
-    if (filters.monto_max) {
-      const max = Number(filters.monto_max);
-      result = result.filter((c) => (c.monto_estimado || 0) <= max);
-    }
-    setFilteredCasos(result);
-  }, [searchQuery, filters]);
-
-  // Filtrado local de entidades
-  useEffect(() => {
-    let result = [...sampleEntidades];
-    if (searchQuery) {
-      const q = searchQuery.toLowerCase();
-      result = result.filter((e) => e.nombre.toLowerCase().includes(q) || (e.descripcion && e.descripcion.toLowerCase().includes(q)));
-    }
-    if (filters.tipo) {
-      result = result.filter((e) => e.tipo === filters.tipo);
-    }
-    setFilteredEntidades(result);
-  }, [searchQuery, filters.tipo]);
-
-  // Búsqueda cruzada local
-  useEffect(() => {
-    if (!searchQuery && !filters.status && !filters.tipo) {
-      setSearchResults([]);
-      return;
-    }
-    setLoading(true);
-    const q = searchQuery.toLowerCase();
-    const results: SearchResult[] = [];
-
-    sampleCasos.forEach((c) => {
-      if (!filters.status || c.status === filters.status) {
-        if (!q || c.titulo.toLowerCase().includes(q) || c.descripcion.toLowerCase().includes(q)) {
-          results.push({
-            type: 'Caso',
-            id: c.id,
-            titulo: c.titulo,
-            descripcion: c.descripcion,
-            relevance: q && c.titulo.toLowerCase().includes(q) ? 1.0 : 0.8,
-          });
-        }
-      }
-    });
-
-    sampleEntidades.forEach((e) => {
-      if (!filters.tipo || e.tipo === filters.tipo) {
-        if (!q || e.nombre.toLowerCase().includes(q) || (e.descripcion && e.descripcion.toLowerCase().includes(q))) {
-          results.push({
-            type: 'Entidad',
-            id: e.id,
-            titulo: e.nombre,
-            descripcion: e.descripcion,
-            relevance: q && e.nombre.toLowerCase().includes(q) ? 1.0 : 0.7,
-          });
-        }
-      }
-    });
-
-    setSearchResults(results);
-    setLoading(false);
-  }, [searchQuery, filters]);
-
-  // Filtrado local de eventos
-  useEffect(() => {
-    if (selectedCasoId) {
-      setEventos(sampleEventos.filter((ev) => ev.caso_id === selectedCasoId));
-    } else {
-      setEventos(sampleEventos);
-    }
-  }, [selectedCasoId]);
 
   useEffect(() => {
+    setCasos(allCasosRed);
     setKpiIndicatorsList(kpiIndicators);
-    setRedesCasosList(allCasosRed);
   }, []);
 
-  const handleNodeClick = (node: GraphNode) => { setSelectedNode(node); setSelectedEdge(null); };
-  const handleEdgeClick = (edge: GraphEdge) => { setSelectedEdge(edge); setSelectedNode(null); };
+  useEffect(() => {
+    if (!selectedCaso) return;
+
+    const currentActores = getActoresByCaso(selectedCaso.id);
+    const currentConexiones = getConexionesByCaso(selectedCaso.id);
+
+    const graph: RedGraphData = {
+      nodes: currentActores.map((actor) => ({
+        id: actor.id,
+        label: actor.nombre,
+        tipo: actor.tipo_actor,
+        status: actor.status_legal,
+        labelShort: actor.nombre.length > 20 ? actor.nombre.substring(0, 20) + '...' : actor.nombre,
+      })),
+      edges: currentConexiones.map((conn) => ({
+        id: conn.id,
+        source: conn.actor_origen_id,
+        target: conn.actor_destino_id,
+        label: conn.descripcion.substring(0, 40) + (conn.descripcion.length > 40 ? '...' : ''),
+        tipo: conn.tipo,
+        weight: conn.monto ? Math.min(1, conn.monto / 100000000) : 0.3,
+      })),
+    };
+
+    setGraphData(graph);
+    setActores(currentActores);
+    setConexiones(currentConexiones);
+    setSelectedActor(null);
+  }, [selectedCaso]);
+
+  const handleActorClick = (actor: { id: string }) => {
+    setSelectedActor(actores.find((item) => item.id === actor.id) ?? null);
+  };
 
   const handleExport = async (format: 'csv' | 'json', tipo: string) => {
     const res = await fetch(`/api/export?format=${format}&tipo=${tipo}`);
@@ -195,16 +81,13 @@ export default function Home() {
     URL.revokeObjectURL(url);
   };
 
-  const mainTabs: { key: MainTab; label: string; count?: number }[] = [
-    { key: 'search', label: 'Búsqueda', count: searchResults.length },
-    { key: 'casos', label: 'Casos', count: filteredCasos.length },
-    { key: 'entidades', label: 'Entidades', count: filteredEntidades.length },
-    { key: 'timeline', label: 'Línea Temporal', count: eventos.length },
-  ];
+  const totalUsdDesviado = allCasosRed.reduce((acc, c) => acc + c.monto_usd, 0);
+  const allActoresCount = allActoresRed.length;
 
   return (
     <main id="main-content" className="min-h-screen bg-[#f5f3ec] dark:bg-[#121316] transition-colors py-6 sm:py-10">
       <section className="mx-auto max-w-7xl px-4 sm:px-6">
+        {/* Encabezado editorial */}
         <div className="mb-8 max-w-3xl border-b-2 border-[#1c1917] pb-4 dark:border-[#3f3f46]">
           <span className="text-xs font-mono font-bold uppercase tracking-widest text-[#b91c1c] dark:text-[#f87171] block mb-1">
             [ ARCHIVO PÚBLICO & DOCUMENTACIÓN ]
@@ -213,88 +96,104 @@ export default function Home() {
             Exploración de Expedientes
           </h1>
           <p className="mt-2 text-sm font-mono text-[#57534e] dark:text-[#a1a1aa]">
-            Registro estructurado de casos de corrupción, actores implicados, perjuicio social y cronología judicial en Honduras.
+            Registro estructurado de casos emblemáticos de corrupción en Honduras, con actores implicados,
+            perjuicio económico y estado judicial, con base en investigaciones del CNA, el Ministerio Público
+            y expedientes públicos.
           </p>
         </div>
 
-        {/* Main Tabs */}
-        <div className="card mb-6">
-          <div className="border-b-2 border-[#1c1917] dark:border-[#3f3f46] overflow-x-auto bg-[#faf8f2] dark:bg-[#181920]">
-            <nav className="flex gap-1 px-4 py-2 min-w-max" role="tablist" aria-label="Tabs principales">
-              {mainTabs.map((tab) => (
-                <button
-                  key={tab.key}
-                  role="tab"
-                  aria-selected={activeTab === tab.key}
-                  onClick={() => setActiveTab(tab.key)}
-                  className={`py-1.5 px-3 text-xs font-mono font-bold uppercase tracking-wider border-2 transition-all ${
-                    activeTab === tab.key
-                      ? 'border-[#1c1917] bg-[#1c1917] text-white dark:border-[#f4f4f5] dark:bg-[#f4f4f5] dark:text-[#121316] shadow-retro-sm dark:shadow-none'
-                      : 'border-transparent text-[#78716c] hover:border-[#1c1917] hover:text-[#1c1917] dark:text-[#a1a1aa] dark:hover:border-[#71717a] dark:hover:text-white'
-                  }`}
-                >
-                  {tab.label}
-                  {tab.count !== undefined && (
-                    <span className="ml-1.5 px-1 py-0.2 text-[10px] border border-current">
-                      {tab.count}
-                    </span>
-                  )}
-                </button>
-              ))}
-            </nav>
+        {/* Estadísticas reales */}
+        <div className="mb-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
+          <div className="card p-6">
+            <h3 className="text-sm font-mono font-bold uppercase tracking-wider text-[#78716c] dark:text-[#a1a1aa] mb-2 border-b border-[#1c1917]/20 pb-1 dark:border-[#3f3f46]">
+              [ Casos Emblemáticos ]
+            </h3>
+            <p className="text-3xl font-black text-[#1c1917] dark:text-[#f4f4f5]">{allCasosRed.length}</p>
+            <p className="text-xs font-mono text-[#57534e] dark:text-[#a1a1aa] mt-1">redes de corrupción mapeadas</p>
+          </div>
+          <div className="card p-6">
+            <h3 className="text-sm font-mono font-bold uppercase tracking-wider text-[#78716c] dark:text-[#a1a1aa] mb-2 border-b border-[#1c1917]/20 pb-1 dark:border-[#3f3f46]">
+              [ Perjuicio Documentado ]
+            </h3>
+            <p className="text-3xl font-black text-[#b91c1c] dark:text-[#f87171]">
+              US${formatUsdM(totalUsdDesviado)}
+            </p>
+            <p className="text-xs font-mono text-[#57534e] dark:text-[#a1a1aa] mt-1">desviados entre los 5 casos</p>
+          </div>
+          <div className="card p-6">
+            <h3 className="text-sm font-mono font-bold uppercase tracking-wider text-[#78716c] dark:text-[#a1a1aa] mb-2 border-b border-[#1c1917]/20 pb-1 dark:border-[#3f3f46]">
+              [ Actores Mapeados ]
+            </h3>
+            <p className="text-3xl font-black text-[#1d4ed8] dark:text-[#93c5fd]">{allActoresCount}</p>
+            <p className="text-xs font-mono text-[#57534e] dark:text-[#a1a1aa] mt-1">funcionarios, empresas y testaferros</p>
+          </div>
+          <div className="card p-6">
+            <h3 className="text-sm font-mono font-bold uppercase tracking-wider text-[#78716c] dark:text-[#a1a1aa] mb-2 border-b border-[#1c1917]/20 pb-1 dark:border-[#3f3f46]">
+              [ Indicadores KPI ]
+            </h3>
+            <p className="text-3xl font-black text-[#15803d] dark:text-[#86efac]">{kpiIndicatorsList.length}</p>
+            <p className="text-xs font-mono text-[#57534e] dark:text-[#a1a1aa] mt-1">en 6 áreas de impacto</p>
+          </div>
+        </div>
+
+        {/* Visualización de red real */}
+        <div className="card p-4 sm:p-6 mb-6">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4 border-b-2 border-[#1c1917] pb-3 dark:border-[#3f3f46]">
+            <div>
+              <span className="text-[10px] font-mono uppercase tracking-widest text-[#78716c] dark:text-[#a1a1aa] block">
+                [ VISUALIZACIÓN DE RED ]
+              </span>
+              <h2 className="text-base font-black uppercase tracking-wider text-[#1c1917] dark:text-[#f4f4f5]">
+                Grafo de Redes de Corrupción
+              </h2>
+            </div>
+            <span className="text-[10px] font-mono uppercase tracking-widest text-[#b91c1c] dark:text-[#f87171]">
+              {selectedCaso ? `EXPEDIENTE #${selectedCaso.id.toUpperCase()}` : 'SELECCIONA UN CASO'}
+            </span>
           </div>
 
-          {/* Tab: Búsqueda */}
-          {activeTab === 'search' && (
-            <>
-              <div className="p-4 sm:p-6 border-b-2 border-[#1c1917] dark:border-[#3f3f46] bg-[#faf8f2] dark:bg-[#1f2026]">
-                <div className="flex flex-col gap-4">
-                  <SearchBar value={searchQuery} onChange={setSearchQuery} />
-                  <Filters filters={filters} onChange={setFilters} />
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
+            <aside className="lg:col-span-4">
+              <h3 className="mb-3 text-xs font-mono font-bold uppercase tracking-widest text-[#78716c] dark:text-[#a1a1aa] border-b border-[#1c1917]/20 pb-1 dark:border-[#3f3f46]">
+                [ SELECCIÓN DE CASO ]
+              </h3>
+              <CasoSelector casos={casos} selectedId={selectedCaso?.id} onSelect={setSelectedCaso} />
+            </aside>
+
+            <section className="lg:col-span-5" aria-label="Grafo de relaciones">
+              {graphData ? (
+                <RedCorrupcion
+                  graphData={graphData}
+                  actorColors={actorColorsMap}
+                  onActorClick={handleActorClick}
+                  className="h-[450px] sm:h-[560px]"
+                />
+              ) : (
+                <div className="card flex h-[450px] items-center justify-center p-8 text-center font-mono text-xs text-[#78716c] dark:text-[#a1a1aa] sm:h-[560px]">
+                  [ Selecciona un caso para visualizar su red de actores y desvíos ]
                 </div>
-              </div>
-              <div className="p-4" role="tabpanel">
-                {loading && <p className="text-center font-mono text-xs text-[#78716c] dark:text-[#a1a1aa] py-4">[ BUSCANDO EN EXPEDIENTES... ]</p>}
-                {!loading && (
-                  <DataTable
-                    columns={[
-                      { key: 'type', label: 'Tipo', render: (item) => <span className="font-mono uppercase font-bold">{String(item.type)}</span> },
-                      { key: 'titulo', label: 'Título' },
-                      { key: 'descripcion', label: 'Descripción', render: (item) => <span className="text-[#78716c] dark:text-[#a1a1aa] truncate max-w-xs block">{String(item.descripcion || '-')}</span> },
-                      { key: 'relevance', label: 'Relevancia', render: (item) => <span className="font-mono text-[#1d4ed8] dark:text-[#93c5fd] font-bold">{String(item.relevance)}</span> },
-                    ]}
-                    data={searchResults}
-                    emptyMessage="Escribe para buscar en casos, entidades y más"
-                  />
-                )}
-              </div>
-            </>
-          )}
+              )}
+            </section>
 
-          {/* Tab: Casos */}
-          {activeTab === 'casos' && (
-            <div className="p-4" role="tabpanel">
-              <DataTable columns={casoColumns} data={filteredCasos} emptyMessage="No se encontraron casos" />
-            </div>
-          )}
-
-          {/* Tab: Entidades */}
-          {activeTab === 'entidades' && (
-            <div className="p-4" role="tabpanel">
-              <DataTable columns={entidadColumns} data={filteredEntidades} emptyMessage="No se encontraron entidades" />
-            </div>
-          )}
-
-          {/* Tab: Línea Temporal */}
-          {activeTab === 'timeline' && (
-            <div className="p-4" role="tabpanel">
-              <Timeline eventos={eventos} casos={filteredCasos} selectedCasoId={selectedCasoId} onCasoFilter={setSelectedCasoId} />
-            </div>
-          )}
+            <aside className="lg:col-span-3">
+              {selectedActor ? (
+                <ActorDetail
+                  actor={selectedActor}
+                  conexiones={conexiones}
+                  allActores={actores}
+                  onClose={() => setSelectedActor(null)}
+                />
+              ) : (
+                <div className="card p-4 text-xs font-mono text-[#78716c] dark:text-[#a1a1aa]">
+                  [ Selecciona un nodo en el grafo para abrir su ficha de investigación ]
+                </div>
+              )}
+            </aside>
+          </div>
         </div>
 
         {/* Exportación */}
-        <div className="card p-4 sm:p-5 mb-6">
+        <div className="card p-4 sm:p-5">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div>
               <span className="text-[10px] font-mono uppercase tracking-widest text-[#78716c] dark:text-[#a1a1aa] block">
@@ -311,96 +210,7 @@ export default function Home() {
             </div>
           </div>
         </div>
-
-        {/* Grafo general */}
-        <div className="card p-4 sm:p-6">
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4 border-b-2 border-[#1c1917] pb-3 dark:border-[#3f3f46]">
-            <div>
-              <span className="text-[10px] font-mono uppercase tracking-widest text-[#78716c] dark:text-[#a1a1aa] block">
-                [ VISUALIZACIÓN DE RED ]
-              </span>
-              <h2 className="text-base font-black uppercase tracking-wider text-[#1c1917] dark:text-[#f4f4f5]">
-                Grafo General de Entidades
-              </h2>
-            </div>
-            <select
-              value={currentLayout}
-              onChange={(e) => setCurrentLayout(e.target.value as LayoutName)}
-              aria-label="Seleccionar layout del grafo"
-              className="select-base text-xs w-full sm:w-auto"
-            >
-              {(Object.keys(layoutOptions) as LayoutName[]).map((layout) => (
-                <option key={layout} value={layout}>{layoutDescriptions[layout]}</option>
-              ))}
-            </select>
-          </div>
-          <div className="h-[400px] sm:h-[500px] md:h-[600px]">
-            <CytoscapeGraph
-              data={buildGraphData(filteredCasos.length ? filteredCasos : [], filteredEntidades.length ? filteredEntidades : [], [], [])}
-              layout={currentLayout}
-              onNodeClick={handleNodeClick}
-              onEdgeClick={handleEdgeClick}
-              className="h-full"
-            />
-          </div>
-          {(selectedNode || selectedEdge) && (
-            <div className="mt-4 p-4 bg-[#faf8f2] dark:bg-[#1f2026] border-2 border-[#1c1917] dark:border-[#3f3f46] text-xs font-mono transition-colors">
-              {selectedNode && (
-                <div>
-                  <h3 className="font-bold text-sm text-[#1c1917] dark:text-[#f4f4f5] uppercase">[ Nodo Seleccionado ]</h3>
-                  <p className="text-[#57534e] dark:text-[#a1a1aa] mt-1">
-                    <span className="font-bold text-[#1c1917] dark:text-[#f4f4f5]">Nombre:</span> {selectedNode.label}
-                  </p>
-                  <p className="text-[#57534e] dark:text-[#a1a1aa]">
-                    <span className="font-bold text-[#1c1917] dark:text-[#f4f4f5]">Tipo:</span> {selectedNode.type}
-                  </p>
-                  {'descripcion' in selectedNode.data && (
-                    <p className="text-[#57534e] dark:text-[#a1a1aa] mt-1">
-                      <span className="font-bold text-[#1c1917] dark:text-[#f4f4f5]">Descripción:</span> {selectedNode.data.descripcion}
-                    </p>
-                  )}
-                </div>
-              )}
-              {selectedEdge && (
-                <div>
-                  <h3 className="font-bold text-sm text-[#1c1917] dark:text-[#f4f4f5] uppercase">[ Conexión Seleccionada ]</h3>
-                  <p className="text-[#57534e] dark:text-[#a1a1aa] mt-1">
-                    <span className="font-bold text-[#1c1917] dark:text-[#f4f4f5]">Tipo:</span> {selectedEdge.label}
-                  </p>
-                  <p className="text-[#57534e] dark:text-[#a1a1aa]">
-                    <span className="font-bold text-[#1c1917] dark:text-[#f4f4f5]">Fuerza:</span> {(selectedEdge.weight * 100).toFixed(0)}%
-                  </p>
-                </div>
-              )}
-            </div>
-          )}
-        </div>
-
-        {/* Estadísticas */}
-        <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
-          <div className="card p-6">
-            <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-2">Casos Documentados</h3>
-            <p className="text-3xl font-bold text-blue-600 dark:text-blue-400">{filteredCasos.length || '-'}</p>
-            <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">activos y archivados</p>
-          </div>
-          <div className="card p-6">
-            <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-2">Redes de Corrupción</h3>
-            <p className="text-3xl font-bold text-red-600 dark:text-red-400">{redesCasosList.length}</p>
-            <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">casos emblemáticos mapeados</p>
-          </div>
-          <div className="card p-6">
-            <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-2">Indicadores KPI</h3>
-            <p className="text-3xl font-bold text-green-600 dark:text-green-400">{kpiIndicatorsList.length}</p>
-            <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">en 6 áreas de impacto</p>
-          </div>
-          <div className="card p-6">
-            <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-2">Entidades Mapeadas</h3>
-            <p className="text-3xl font-bold text-purple-600 dark:text-purple-400">{filteredEntidades.length || '-'}</p>
-            <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">personas, empresas e instituciones</p>
-          </div>
-        </div>
       </section>
-
     </main>
   );
 }

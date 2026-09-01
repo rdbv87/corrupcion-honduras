@@ -12,19 +12,19 @@ interface RedCorrupcionProps {
 }
 
 const statusBorderColors: Record<string, string> = {
-  condenado: '#b91c1c',   // Rojo sello
+  condenado: '#dc2626',   // Rojo sello
   procesado: '#d97706',   // Ocre
-  pro_fugo: '#c2410c',    // Terracota
-  investigado: '#1d4ed8', // Azul tinta
-  absuelto: '#15803d',    // Verde contable
+  pro_fugo: '#ea580c',    // Terracota
+  investigado: '#2563eb', // Azul tinta
+  absuelto: '#16a34a',    // Verde contable
 };
 
 const edgeTypeColors: Record<string, string> = {
-  financiero: '#b91c1c',
-  familiar: '#be185d',
-  politico: '#1d4ed8',
-  empresarial: '#6d28d9',
-  testaferro: '#4b5563',
+  financiero: '#ef4444',
+  familiar: '#ec4899',
+  politico: '#3b82f6',
+  empresarial: '#8b5cf6',
+  testaferro: '#f59e0b',
 };
 
 export default function RedCorrupcion({
@@ -73,6 +73,12 @@ export default function RedCorrupcion({
           color: '#fff',
           'text-valign': 'center',
           'text-halign': 'center',
+          'text-wrap': 'wrap',
+          'text-max-width': '80px',
+          'text-background-color': '#181920',
+          'text-background-opacity': 0.55,
+          'text-background-padding': '3px',
+          'text-background-shape': 'roundrectangle',
           'font-size': '10px',
           'font-family': 'ui-monospace, monospace',
           'font-weight': 'bold' as cytoscape.Css.FontWeight,
@@ -85,7 +91,7 @@ export default function RedCorrupcion({
       {
         selector: 'node:active',
         style: {
-          'overlay-opacity': 0.15,
+          'overlay-opacity': 0.2,
           'overlay-color': '#1c1917',
         } as cytoscape.Css.Node,
       },
@@ -95,28 +101,36 @@ export default function RedCorrupcion({
           label: 'data(label)',
           width: (ele) => Math.max(1.5, (ele.data('weight') || 1) * 3),
           'line-color': (ele) => edgeTypeColors[ele.data('tipo')] || '#78716c',
+          'line-opacity': 0.9,
           'target-arrow-color': (ele) => edgeTypeColors[ele.data('tipo')] || '#78716c',
           'target-arrow-shape': 'triangle',
+          'target-arrow-fill': 'filled',
+          'arrow-scale': 1.2,
           'curve-style': 'bezier',
           'font-size': '9px',
           'font-family': 'ui-monospace, monospace',
-          color: '#78716c',
+          color: '#d4d4d8',
+          'text-background-color': '#181920',
+          'text-background-opacity': 0.7,
+          'text-background-padding': '2px',
+          'text-background-shape': 'roundrectangle',
           'text-rotation': 'autorotate',
         } as cytoscape.Css.Edge,
       },
       {
         selector: 'node:selected',
         style: {
-          'border-width': 4,
-          'border-color': '#1c1917',
-          'background-color': '#f59e0b',
+          'border-width': 5,
+          'border-color': '#fbbf24',
+          'background-color': '#1c1917',
         } as cytoscape.Css.Node,
       },
       {
         selector: 'edge:selected',
         style: {
-          width: 4,
-          'line-color': '#1c1917',
+          width: 5,
+          'line-color': '#fbbf24',
+          'target-arrow-color': '#fbbf24',
         } as cytoscape.Css.Edge,
       },
     ];
@@ -137,10 +151,16 @@ export default function RedCorrupcion({
     const activeLayout = cy.layout({
       name: 'cose',
       animate: false,
-      nodeRepulsion: () => 10000,
-      idealEdgeLength: () => 120,
-      gravity: 0.25,
-      padding: 50,
+      nodeRepulsion: () => 12000,
+      idealEdgeLength: () => 140,
+      edgeElasticity: (edge) => {
+        const len = cy.elements().length || 1;
+        return Math.max(50, Math.min(120, 4000 / len));
+      },
+      gravity: 0.6,
+      numIter: 1500,
+      padding: 60,
+      randomize: true,
     } as cytoscape.LayoutOptions);
 
     activeLayout.run();
@@ -169,7 +189,7 @@ export default function RedCorrupcion({
       <div
         ref={containerRef}
         className="w-full h-full bg-[#181920] border-2 border-[#1c1917] dark:border-[#3f3f46] shadow-retro dark:shadow-none"
-        style={{ minHeight: '400px' }}
+        style={{ minHeight: '400px', backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.06) 1px, transparent 1px)', backgroundSize: '22px 22px' }}
       />
 
       <div className="absolute top-3 left-3 bg-[#fdfcf9] dark:bg-[#1f2026] p-3 text-xs font-mono border-2 border-[#1c1917] dark:border-[#3f3f46] shadow-retro-sm dark:shadow-none">
